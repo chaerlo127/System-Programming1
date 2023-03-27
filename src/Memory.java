@@ -2,7 +2,7 @@ import java.util.Vector;
 
 // 데이터 저장 공간의 집합
 public class Memory {
-	private Vector<Integer> memory; 
+	private Vector<Integer> memory;  // 이거 string으로 바꾸기, 파일을 여기에 넣기 코멘트 다 빼고 올려둬라
 	
 	private CPU.Register mar;
 	private CPU.Register mbr;

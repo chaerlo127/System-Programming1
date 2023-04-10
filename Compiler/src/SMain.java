@@ -18,7 +18,7 @@ public class SMain {
 		scanner.close();
 	}
 	public void run() {
-		parser.parse(scanner); // 어떤 파일을 파싱해라
+		parser.parse(); // 어떤 파일을 파싱해라
 		
 	}
 	public static void main(String[] args) {

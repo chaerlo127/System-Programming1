@@ -1,9 +1,10 @@
-import java.util.Scanner;
-
 public class SLex {
 
-	public String getToken(Scanner scanner) {
-		// TODO Auto-generated method stub
+	public String getToken() {
+		return null;
+	}
+
+	public String[] getTokens() {
 		return null;
 	}
 

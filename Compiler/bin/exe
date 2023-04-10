@@ -1,12 +1,10 @@
-		.Header
+		.header
 		$DS 12
 		count 0
 		sum 4
 		i 8
-		$SS 0
-		$HS 0
 		
-		.Code
+		.code
 		move mar @count
 		move mbr 10
 		sto

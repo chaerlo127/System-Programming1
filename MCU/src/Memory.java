@@ -29,14 +29,14 @@ public class Memory {
 	// MAR(CPU, Memory의 위치를 알고 있음)과 MBR을 알고 있어야 함.
 	public void load() {
 		// MAR 주소 읽어오기 
-		int address = mar.getValue();
-		mbr.setValue(this.memory.get(address)); // 메모리를 읽어서 집어넣자 
+//		int address = mar.getValue();
+//		mbr.setValue(this.memory.get(address)); // 메모리를 읽어서 집어넣자 
 	}
 	
 	public void store() {
 		int address = mar.getValue();
-		int value = mbr.getValue();
-		memory.set(address, value);
+//		int value = mbr.getValue();
+//		memory.set(address, value);
 	}
 
 }

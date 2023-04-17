@@ -67,6 +67,7 @@ public class SParser {
 			// lex에게 달라고 해야함. 
 			String token = lex.getToken();
 			while(token.compareTo(".code") != 0) {
+				// symbol table
 				Declaration declaration = new Declaration();
 				declaration.setVariableName(token);
 				declaration.setSize(lex.getToken());
@@ -86,15 +87,31 @@ public class SParser {
 		}
 		@Override
 		public String parse() {
-			Statement statement = new Statement();
-			String token = statement.parse();
-			while(token.compareTo(".end") != 0) {
-				this.statements.add(statement);
+			String[] tokens = lex.getTokens();
+			String operator = tokens[0];
+			while(operator.compareTo(".end") != 0) {
 				
-				statement = new Statement();
-				token = statement.parse();
+				if(!operator.startsWith("//")) {
+					Statement statement = null;
+					switch (tokens.length) {
+						case 1:
+							statement = new Statement(tokens[0]);
+							break;
+						case 2: 
+							statement = new Statement(tokens[0], tokens[1]);
+							break;
+						case 3: 
+							statement = new Statement(tokens[0], tokens[1], tokens[2]);
+							break;
+						default: 
+							break;
+					}
+					this.statements.add(statement);
+				}
+				tokens = lex.getTokens();
+				operator = tokens[0];
 			}
-			return token;
+			return operator;
 		}
 	}
 	
@@ -102,6 +119,24 @@ public class SParser {
 		private String operator;
 		private String operand1;
 		private String operand2;
+		
+		public Statement(String operator) {
+			this.operator = operator;
+			
+		}
+
+		public Statement(String operator, String operand1) {
+			this.operator = operator;
+			this.operand1 = operand1;
+			
+		}
+
+		public Statement(String operator, String operand1, String operand2) {
+			this.operator = operator;
+			this.operand1 = operand1;
+			this.operand2 = operand2;
+			
+		}
 		
 		@Override
 		public String parse() {

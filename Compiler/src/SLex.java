@@ -7,9 +7,8 @@ public class SLex {
 	private Scanner scanner;
 	
 	public SLex() {
-		
-
 	}
+	
 	public void initialize(String fileName) {
 		try {
 			scanner = new Scanner(new File(fileName));
@@ -34,8 +33,9 @@ public class SLex {
 	public String[] getTokens() {
 		if(scanner.hasNext()) {
 			String line = scanner.nextLine();
-//			line = line.strip();
-			return line.split("[\\s]+"); // regular expression
+			line = line.trim();
+			String[] tokens = line.split("[ \t]+");
+			return tokens; // regular expression
 		}
 		return null;
 	}

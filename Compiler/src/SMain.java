@@ -4,14 +4,12 @@ public class SMain {
 	private SParser parser;
 	
 	public SMain() {
-		
 	}
 	
 	public void initialize() {
 		lex = new SLex();
 		lex.initialize("executable/exe");
 		parser = new SParser();
-		parser.associate(lex);
 	}
 	
 	public void finalize() {
@@ -19,8 +17,7 @@ public class SMain {
 	}
 	
 	public void run() {
-		parser.parse(); // 어떤 파일을 파싱해라
-		
+		parser.parse(this.lex); // 어떤 파일을 파싱해라
 	}
 	
 	public static void main(String[] args) {

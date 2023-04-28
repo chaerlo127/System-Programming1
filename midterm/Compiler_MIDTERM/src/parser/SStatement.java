@@ -47,4 +47,15 @@ public class SStatement implements INode {
 				+ Constant.CStatement.PRINT_STATEMENT_OPERAND1 + this.operand1
 				+ Constant.CStatement.PRINT_STATEMENT_OPERAND2 + this.operand2;
 	}
+	
+	public String showStatmentForUI() {
+		if(this.operand1 == null) 
+			return Constant.CStatement.PRINT_STATEMENT_OPERATOR + this.operator ;
+		if(this.operand2 == null) 
+			return Constant.CStatement.PRINT_STATEMENT_OPERATOR + this.operator +  Constant.TAB 
+					+ Constant.CStatement.PRINT_STATEMENT_OPERAND1 + this.operand1;
+		return Constant.CStatement.PRINT_STATEMENT_OPERATOR + this.operator + Constant.TAB 
+				+ Constant.CStatement.PRINT_STATEMENT_OPERAND1 + this.operand1 + Constant.TAB 
+				+ Constant.CStatement.PRINT_STATEMENT_OPERAND2 + this.operand2;
+	}
 }

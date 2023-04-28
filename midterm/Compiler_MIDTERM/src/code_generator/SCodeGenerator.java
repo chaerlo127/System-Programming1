@@ -11,42 +11,32 @@ import parser.SSymbolTable;
 public class SCodeGenerator {
 	private SSymbolTable symbolTable;
 	private Vector<SStatement> statements;
-	private Vector<String> generationCode = new Vector<String>();
+	private Vector<String> generationCode;
 	
 
-	public void connect(SSymbolTable symbolTable, Vector<SStatement> statements) {
+	public void connect(SSymbolTable symbolTable, Vector<SStatement> statements, Vector<String> generationCode) {
 		this.symbolTable = symbolTable;
 		this.statements = statements;
+		this.generationCode = generationCode;
 	}
 	
 	public void generate() {
-		generateStatement();
-		System.out.println();
-		System.out.println(Constant.CCodeGenerator.PRINT_CODEGENERATOR_SEN);
-		for(String code: generationCode) {
-			System.out.println(code);
-		}
-	}
-	
-
-	private void generateStatement() {
 		for (SStatement statement : statements) {
 			String code = null;
 			// operator
 			SOperator operator = SOperator.findByAssemblyCode(statement.getOperator());
-			code = Constant.CCodeGenerator.HexaCodeGenerate(operator.getCode());
-			
+			code = Constant.CCodeGenerator.hexaCodeGenerate(operator.getCode());
+
 			// operand1
-			if(statement.getOperand1() != null) {
+			if (statement.getOperand1() != null) {
 				code += translateOperand(statement.getOperand1());
 			}
 			if (statement.getOperand2() != null) {
 				code += translateOperand(statement.getOperand2());
 			}
 			generationCode.add(code);
-			
-		}
 
+		}
 	}
 	
 	/**
@@ -70,9 +60,9 @@ public class SCodeGenerator {
 		} else {
 			SOperand assemblyCode = SOperand.findByAssemblyCode(operand);
 			if (assemblyCode != null) {
-				return Constant.CCodeGenerator.HexaCodeGenerate(assemblyCode.getCode());
+				return Constant.CCodeGenerator.hexaCodeGenerate(assemblyCode.getCode());
 			} else {
-				return Constant.CCodeGenerator.HexaCodeGenerate(Integer.parseInt(operand));
+				return Constant.CCodeGenerator.hexaCodeGenerate(Integer.parseInt(operand));
 			}
 
 		}

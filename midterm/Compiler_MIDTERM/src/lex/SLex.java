@@ -10,9 +10,9 @@ public class SLex {
 	public SLex() {
 	}
 	
-	public void initialize(String fileName) {
+	public void initialize(File file) {
 		try {
-			scanner = new Scanner(new File(fileName));
+			scanner = new Scanner(file);
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

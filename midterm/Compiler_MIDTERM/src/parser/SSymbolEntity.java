@@ -16,4 +16,9 @@ public class SSymbolEntity {
 		return Constant.CSymbolTable.PRINT_SYMBOL_TABLE_VARIABLE_NAME + this.variableName 
 		+ Constant.CSymbolTable.PRINT_SYMBOL_TABLE_VALUE + this.value;
 	}
+	
+	public String showSymbolForUI() {
+		return Constant.CSymbolTable.PRINT_SYMBOL_TABLE_VARIABLE_NAME + this.variableName + Constant.TAB + 
+				Constant.CSymbolTable.PRINT_SYMBOL_TABLE_VALUE + this.value;
+	}
 }

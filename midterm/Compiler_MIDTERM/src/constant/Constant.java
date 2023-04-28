@@ -17,6 +17,14 @@ public class Constant {
 	
 	public class CCodeGenerator{
 		public final static String PRINT_CODEGENERATOR_SEN = "------------------------ [OBJECT CODE] ------------------------";
+		public final static String PRINT_HEXA_SIGN = "0x";
+		
+		
+		public static String HexaCodeGenerate(int decimalNum) {
+			return Constant.CCodeGenerator.PRINT_HEXA_SIGN + Integer.toHexString(decimalNum) + " ";
+		}
+			
+
 		
 	}
 

@@ -34,7 +34,7 @@ public class SCodeGenerator {
 			String code = null;
 			// operator
 			SOperator operator = SOperator.findByAssemblyCode(statement.getOperator());
-			code = "0x" + Integer.toHexString(operator.getCode()) + " ";
+			code = Constant.CCodeGenerator.HexaCodeGenerate(operator.getCode());
 			
 			// operand1
 			if(statement.getOperand1() != null) {
@@ -66,13 +66,13 @@ public class SCodeGenerator {
 		operand = this.deleteAt(operand);
 		SSymbolEntity entity = this.symbolTable.findByVariableName(operand);
 		if (entity != null) {
-			return "0x" + Integer.toHexString(entity.getValue()) + " ";
+			return Constant.CCodeGenerator.PRINT_HEXA_SIGN + Integer.toHexString(entity.getValue()) + " ";
 		} else {
 			SOperand assemblyCode = SOperand.findByAssemblyCode(operand);
 			if (assemblyCode != null) {
-				return "0x" + Integer.toHexString(assemblyCode.getCode()) + " ";
+				return Constant.CCodeGenerator.HexaCodeGenerate(assemblyCode.getCode());
 			} else {
-				return "0x" + Integer.toHexString(Integer.parseInt(operand));
+				return Constant.CCodeGenerator.HexaCodeGenerate(Integer.parseInt(operand));
 			}
 
 		}

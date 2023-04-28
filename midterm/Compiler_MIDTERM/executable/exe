@@ -1,5 +1,5 @@
-move		.header
-		$DS 12
+		.header
+		DS 12
 		count 0
 		sum 4
 		i 8
@@ -32,5 +32,5 @@ start:
 		move mbr ac1
 		sto 
 		jump start
-end: 	halt
+		halt
 .end

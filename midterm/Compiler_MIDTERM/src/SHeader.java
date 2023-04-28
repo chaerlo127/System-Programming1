@@ -1,5 +1,6 @@
 public class SHeader implements INode {
 	private SSymbolTable declaratioins;
+	
 
 	public SHeader(SSymbolTable symbolTable) {
 		this.declaratioins = symbolTable;

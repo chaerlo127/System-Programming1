@@ -1,3 +1,5 @@
+import cosntant.Constant;
+
 public class SStatement implements INode {
 	private String operator;
 	private String operand1;
@@ -30,5 +32,13 @@ public class SStatement implements INode {
 			operand2 = tokens[2];
 		}
 		return operator;
+	}
+	
+	public String showStatment() {
+		if(this.operand1 == null) this.operand1 = "";
+		if(this.operand2 == null) this.operand2 = "";
+		return Constant.Statement.PRINT_STATEMENT_OPERATOR + this.operator 
+				+ Constant.Statement.PRINT_STATEMENT_OPERAND1 + this.operand1
+				+ Constant.Statement.PRINT_STATEMENT_OPERAND2 + this.operand2;
 	}
 }

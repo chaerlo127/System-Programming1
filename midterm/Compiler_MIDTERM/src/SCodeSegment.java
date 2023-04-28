@@ -4,8 +4,8 @@ public class SCodeSegment implements INode {
 	private Vector<SStatement> statements;
 	private SSymbolTable symbolTable;
 
-	public SCodeSegment(SSymbolTable symbolTable) {
-		this.statements = new Vector<SStatement>(); // executable 한 문장 집합임.
+	public SCodeSegment(SSymbolTable symbolTable, Vector<SStatement> statements) {
+		this.statements = statements; // executable 한 문장 집합임.
 		this.symbolTable = symbolTable;
 	}
 

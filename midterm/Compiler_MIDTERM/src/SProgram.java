@@ -1,13 +1,12 @@
+import java.util.Vector;
 
 public class SProgram implements INode {
-	private SSymbolTable symbolTable;
 	private SHeader header;
 	private SCodeSegment codeSegment;
 
-	public SProgram() {
-		this.symbolTable = new SSymbolTable();
+	public SProgram(SSymbolTable symbolTable, Vector<SStatement> statements) {
 		this.header = new SHeader(symbolTable);
-		this.codeSegment = new SCodeSegment(symbolTable);
+		this.codeSegment = new SCodeSegment(symbolTable, statements);
 	}
 
 	@Override

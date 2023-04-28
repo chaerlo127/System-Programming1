@@ -1,0 +1,54 @@
+// int main(){
+// 		int count = 10;
+// 		int sum = 0;
+// 		for (int i = 0; i < count; i++){
+// 		  sum = sum + 1;
+// 		}
+// 		System.out.println(sum);
+// }
+		.Header
+		DS 12
+		SS 0
+		HS 0
+		.Code
+// DS 12 - count 0, sum 4, i 8
+// 		count = 10;
+		move mar @count
+		move mbr 10
+		sto
+// 		sum = 0;
+		move mar @sum
+		move mbr 0
+		sto
+// 		i = 0;
+		move mar @i
+		move mbr 0
+		sto
+start:
+//		read i
+		move mar @i // 메모리에서 i를 읽어온 것
+		lda
+		move ac1 mbr // mbr 에 있는 것을 ac로 옮김
+// 		read count
+		move mar @count
+		lda 
+		move ac2 mbr
+// 		i - count
+		sub ac1 ac2 // ac1에서 ac2를 빼고 그 값을 ac1에 저장.
+//		i > = count then jump to end
+		gtj end
+// 		read sum
+		move mar @sum
+		lda
+		move ac1 mbr
+// ac2 = 1
+		move ac2 1
+
+// add sum = sum + 1
+		add ac1 ac2
+		move mar ac1
+		move mbr ac1
+		sto 
+		jump start
+end: 	halt
+.end

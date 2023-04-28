@@ -1,12 +1,17 @@
 package code_generator;
 import java.util.Vector;
 
+import constant.Constant;
+import instruction_design.SOperand;
+import instruction_design.SOperator;
 import parser.SStatement;
+import parser.SSymbolEntity;
 import parser.SSymbolTable;
 
 public class SCodeGenerator {
 	private SSymbolTable symbolTable;
 	private Vector<SStatement> statements;
+	private Vector<String> generationCode = new Vector<String>();
 	
 
 	public void connect(SSymbolTable symbolTable, Vector<SStatement> statements) {
@@ -15,6 +20,62 @@ public class SCodeGenerator {
 	}
 	
 	public void generate() {
+		generateStatement();
+		System.out.println();
+		System.out.println(Constant.CCodeGenerator.PRINT_CODEGENERATOR_SEN);
+		for(String code: generationCode) {
+			System.out.println(code);
+		}
+	}
+	
+
+	private void generateStatement() {
+		for (SStatement statement : statements) {
+			String code = null;
+			// operator
+			SOperator operator = SOperator.findByAssemblyCode(statement.getOperator());
+			code = "0x" + Integer.toHexString(operator.getCode()) + " ";
+			
+			// operand1
+			if(statement.getOperand1() != null) {
+				code += translateOperand(statement.getOperand1());
+			}
+			if (statement.getOperand2() != null) {
+				code += translateOperand(statement.getOperand2());
+			}
+			generationCode.add(code);
+			
+		}
+
+	}
+	
+	/**
+	 * extract methods
+	 * @param String isAt
+	 * @return String isAt
+	 */
+	private String deleteAt(String isAt) {
+		if(isAt.contains("@")) {
+			isAt = isAt.replace("@", "");
+		}
+		return isAt;
+	}
+	
+	private String translateOperand(String operand) {
+		// operand2
+		operand = this.deleteAt(operand);
+		SSymbolEntity entity = this.symbolTable.findByVariableName(operand);
+		if (entity != null) {
+			return "0x" + Integer.toHexString(entity.getValue()) + " ";
+		} else {
+			SOperand assemblyCode = SOperand.findByAssemblyCode(operand);
+			if (assemblyCode != null) {
+				return "0x" + Integer.toHexString(assemblyCode.getCode()) + " ";
+			} else {
+				return "0x" + Integer.toHexString(Integer.parseInt(operand));
+			}
+
+		}
 		
 	}
 	

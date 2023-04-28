@@ -13,7 +13,7 @@ public class SSymbolEntity {
 	public void setValue(int value) {this.value = value;}
 	
 	public String showSymbol() {
-		return Constant.SymbolTable.PRINT_SYMBOL_TABLE_VARIABLE_NAME + this.variableName 
-		+ Constant.SymbolTable.PRINT_SYMBOL_TABLE_VALUE + this.value;
+		return Constant.CSymbolTable.PRINT_SYMBOL_TABLE_VARIABLE_NAME + this.variableName 
+		+ Constant.CSymbolTable.PRINT_SYMBOL_TABLE_VALUE + this.value;
 	}
 }

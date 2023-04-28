@@ -49,13 +49,13 @@ public class SMain {
 	}
 	
 	public void showSymbolTable() {
-		System.out.println(Constant.SymbolTable.PRINT_SYMBOL_TABLE_SEN);
+		System.out.println(Constant.CSymbolTable.PRINT_SYMBOL_TABLE_SEN);
 		for (SSymbolEntity entity: this.symbolTable) {
 			System.out.println(entity.showSymbol());
 		}
 	}
 	public void showStatement() {
-		System.out.println(Constant.Statement.PRINT_STATEMENT_SEN);
+		System.out.println(Constant.CStatement.PRINT_STATEMENT_SEN);
 		for (SStatement statement: this.statements) {
 			System.out.println(statement.showStatment());
 		}

@@ -8,6 +8,9 @@ public enum SSegment {
 	
 	private int code;
 	private String description;
+	public int getCode() {
+		return code;
+	}
 	
 	
 	
@@ -15,6 +18,5 @@ public enum SSegment {
 		this.code = code;
 		this.description = description;
 	}
-	
 
 }

@@ -1,39 +1,38 @@
 		.header
-		DS 12
 		count 0
 		sum 4
 		i 8
 		
 		.code
-		move mar @count
-		move mbr 10
+		movea mar @count
+		movec mbr 10
 		sto
-		move mar @sum
-		move mbr 0
+		movea mar @sum
+		movec mbr 0
 		sto
-		move mar @i
-		move mbr 0
+		movea mar @i
+		movec mbr 0
 		sto
 start:
-		move mar @i
+		movea mar @i
 		// 메모리에서 i를 읽어온 것
 		lda
-		move ac1 mbr
+		mover ac1 mbr
 		// mbr 에 있는 것을 ac로 옮김
-		move mar @count
+		movea mar @count
 		lda 
-		move ac2 mbr
-		sub ac1 ac2
+		mover ac2 mbr
+		subr ac1 ac2
 		// ac1에서 ac2를 빼고 그 값을 ac1에 저장.
 		gtj end
-		move mar @sum
+		movea mar @sum
 		lda
-		move ac1 mbr
-		move ac2 1
-		add ac1 ac2
-		move mar ac1
-		move mbr ac1
-		sto 
+		mover ac1 mbr
+		movec ac2 1
+		addr ac1 ac2
+		mover mar ac1
+		mover mbr ac1
+		sto
 		jump start
-		halt
+end:	halt
 .end

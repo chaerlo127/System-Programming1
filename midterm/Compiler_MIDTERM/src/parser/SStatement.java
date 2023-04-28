@@ -7,10 +7,10 @@ public class SStatement implements INode {
 	private String operator;
 	private String operand1;
 	private String operand2;
-
-	public SStatement(String operator) {
-		this.operator = operator;
-	}
+	public String getOperator() {return operator;}
+	public String getOperand1() {return operand1;}
+	public String getOperand2() {return operand2;}
+	public SStatement(String operator) {this.operator = operator;}
 
 	public SStatement(String operator, String operand1) {
 		this.operator = operator;
@@ -38,10 +38,13 @@ public class SStatement implements INode {
 	}
 	
 	public String showStatment() {
-		if(this.operand1 == null) this.operand1 = "";
-		if(this.operand2 == null) this.operand2 = "";
-		return Constant.Statement.PRINT_STATEMENT_OPERATOR + this.operator 
-				+ Constant.Statement.PRINT_STATEMENT_OPERAND1 + this.operand1
-				+ Constant.Statement.PRINT_STATEMENT_OPERAND2 + this.operand2;
+		if(this.operand1 == null) 
+			return Constant.CStatement.PRINT_STATEMENT_OPERATOR + this.operator ;
+		if(this.operand2 == null) 
+			return Constant.CStatement.PRINT_STATEMENT_OPERATOR + this.operator 
+					+ Constant.CStatement.PRINT_STATEMENT_OPERAND1 + this.operand1;
+		return Constant.CStatement.PRINT_STATEMENT_OPERATOR + this.operator 
+				+ Constant.CStatement.PRINT_STATEMENT_OPERAND1 + this.operand1
+				+ Constant.CStatement.PRINT_STATEMENT_OPERAND2 + this.operand2;
 	}
 }

@@ -1,6 +1,6 @@
 package instruction_design;
 
-public enum CSegment {
+public enum SSegment {
 	DS(0x01, "DATA SEGMENT"),
 	SS(0x02, "STACK SEGMENT"),
 	CS(0x03, "CODE SEGMENT"),
@@ -11,7 +11,7 @@ public enum CSegment {
 	
 	
 	
-	CSegment(int code, String description) {
+	SSegment(int code, String description) {
 		this.code = code;
 		this.description = description;
 	}

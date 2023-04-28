@@ -1,6 +1,6 @@
 package instruction_design;
 
-public enum COperator {
+public enum SOperator {
 	MOVEA(0x01, "주소에 저장된값을 레지스터로 이동 "),
 	MOVEC(0x02, "상수를 레지스터로 이동 "),
 	MOVER(0x03, "레지스터에 저장된 값을 다른 레지스터로 이동 "),
@@ -27,7 +27,7 @@ public enum COperator {
 	
 	
 	
-	COperator(int code, String description) {
+	SOperator(int code, String description) {
 		this.code = code;
 		this.description = description;
 	}

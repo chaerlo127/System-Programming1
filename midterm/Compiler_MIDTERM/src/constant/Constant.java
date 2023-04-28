@@ -1,4 +1,4 @@
-package cosntant;
+package constant;
 
 public class Constant {
 	public class SymbolTable{

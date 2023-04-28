@@ -1,3 +1,7 @@
+package parser;
+import parser.INode;
+import lex.SLex;
+
 public class SHeader implements INode {
 	private SSymbolTable declaratioins;
 	

@@ -1,4 +1,8 @@
+package parser;
 import java.util.Vector;
+
+import parser.INode;
+import lex.SLex;
 
 public class SProgram implements INode {
 	private SHeader header;

@@ -1,6 +1,13 @@
+package main;
 import java.util.Vector;
 
-import cosntant.Constant;
+import code_generator.SCodeGenerator;
+import constant.Constant;
+import lex.SLex;
+import parser.SParser;
+import parser.SStatement;
+import parser.SSymbolEntity;
+import parser.SSymbolTable;
 
 public class SMain {
 	private SSymbolTable symbolTable;

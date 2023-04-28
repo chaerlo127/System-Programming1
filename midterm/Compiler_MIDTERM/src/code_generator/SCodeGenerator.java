@@ -1,4 +1,8 @@
+package code_generator;
 import java.util.Vector;
+
+import parser.SStatement;
+import parser.SSymbolTable;
 
 public class SCodeGenerator {
 	private SSymbolTable symbolTable;

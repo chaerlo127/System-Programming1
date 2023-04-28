@@ -1,4 +1,7 @@
+package parser;
 import java.util.Vector;
+
+import lex.SLex;
 
 public class SCodeSegment implements INode {
 	private Vector<SStatement> statements;

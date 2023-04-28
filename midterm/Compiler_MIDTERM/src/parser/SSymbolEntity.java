@@ -1,4 +1,5 @@
-import cosntant.Constant;
+package parser;
+import constant.Constant;
 
 public class SSymbolEntity {
 	// name, label과 같은 이름을 넣게하면 type 를 넣어야 함. ,,. 

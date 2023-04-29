@@ -1,4 +1,7 @@
 package code_generator;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Vector;
 
 import constant.Constant;
@@ -35,9 +38,25 @@ public class SCodeGenerator {
 				code += translateOperand(statement.getOperand2());
 			}
 			generationCode.add(code);
-
 		}
 	}
+	
+
+	public void createExeFile(String fileName) {
+		try {
+			File exeFile = new File(Constant.CCodeGenerator.EXEDirectory + fileName);
+			FileWriter fw = new FileWriter(exeFile);
+			
+			for(String code: generationCode) {
+				fw.write(code + "\n");
+			}
+			fw.flush();
+			fw.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}	
+	}
+	
 	
 	/**
 	 * extract methods
@@ -68,6 +87,7 @@ public class SCodeGenerator {
 		}
 		
 	}
+
 	
 	
 }

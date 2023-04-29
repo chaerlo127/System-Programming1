@@ -19,7 +19,7 @@ public class Constant {
 	public class CCodeGenerator{
 		public final static String PRINT_CODEGENERATOR_SEN = "------------------------ [OBJECT CODE] ------------------------";
 		public final static String PRINT_HEXA_SIGN = "0x";
-		
+		public static final String EXEDirectory = "exe" + "/";
 		
 		public static String hexaCodeGenerate(int decimalNum) {
 			return Constant.CCodeGenerator.PRINT_HEXA_SIGN + Integer.toHexString(decimalNum) + " ";
@@ -28,7 +28,7 @@ public class Constant {
 	
 	public class CUI{
 		public static final String userOpenFileDir = "user.dir";
-		public static final String directory = "executable" + "/";
+		public static final String directory = "assembly" + "/";
 	}
 
 }

@@ -103,7 +103,8 @@ public class SUI extends JFrame {
 	public void run() {
 		while(this.exitButton) {
 			if(!files.isEmpty()) {
-				this.lex.initialize(files.remove(0));
+				File file = files.remove(0);
+				this.lex.initialize(file);
 				// parser
 				parser.parse(this.lex, symbolTable, statements); // 어떤 파일을 파싱해라
 				this.showSymbolTable();
@@ -113,6 +114,7 @@ public class SUI extends JFrame {
 				// code generator
 				codeGenerator.connect(symbolTable, statements, generationCode);
 				codeGenerator.generate();
+				codeGenerator.createExeFile(file.getName());
 			}
 		}
 		System.exit(0);
@@ -122,11 +124,11 @@ public class SUI extends JFrame {
 	public String showSymbolTable() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("<html>");
-		System.out.println(Constant.CSymbolTable.PRINT_SYMBOL_TABLE_SEN);
+		System.out.println(Constant.CSymbolTable.PRINT_SYMBOL_TABLE_SEN); // console
 		sb.append("<html>");
 		sb.append(Constant.CSymbolTable.PRINT_SYMBOL_TABLE_SEN).append("<br/>");
 		for (SSymbolEntity entity: this.symbolTable) {
-			System.out.println(entity.showSymbol());
+			System.out.println(entity.showSymbol()); // console
 			sb.append(entity.showSymbolForUI()).append("<br/>");
 		}
 		sb.append("</html>");
@@ -138,9 +140,9 @@ public class SUI extends JFrame {
 		StringBuilder sb = new StringBuilder();
 		sb.append("<html>");
 		sb.append(Constant.CStatement.PRINT_STATEMENT_SEN).append("<br/>");
-		System.out.println(Constant.CStatement.PRINT_STATEMENT_SEN);
+		System.out.println(Constant.CStatement.PRINT_STATEMENT_SEN); // console
 		for (SStatement statement: this.statements) {
-			System.out.println(statement.showStatment());
+			System.out.println(statement.showStatment()); //console
 			sb.append(statement.showStatmentForUI()).append("<br/>");
 		}
 		sb.append("</html>");
@@ -152,9 +154,9 @@ public class SUI extends JFrame {
 		StringBuilder sb = new StringBuilder();
 		sb.append("<html>");
 		sb.append(Constant.CCodeGenerator.PRINT_CODEGENERATOR_SEN).append("<br/>");
-		System.out.println(Constant.CStatement.PRINT_STATEMENT_SEN);
+		System.out.println(Constant.CStatement.PRINT_STATEMENT_SEN); // console
 		for (String code: generationCode) {
-			System.out.println(code);
+			System.out.println(code); // console
 			sb.append(code).append("<br/>");
 		}
 		sb.append("</html>");

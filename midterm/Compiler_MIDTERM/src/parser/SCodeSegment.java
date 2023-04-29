@@ -24,7 +24,7 @@ public class SCodeSegment implements INode {
 
 				SSymbolEntity entity = new SSymbolEntity();
 				entity.setVariableName(operator.replace(":", ""));
-				entity.setValue(this.statements.size()-1); // pc count
+				entity.setValue(this.statements.size()); // pc count
 				this.symbolTable.add(entity);
 			} else {
 				// parse tree

@@ -34,5 +34,6 @@ start:
 		mover mbr ac1
 		sto
 		jump start
-end:	halt
+end:	
+		halt
 .end

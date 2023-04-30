@@ -212,6 +212,8 @@ public class CPU {
 		System.out.println("----------------------jump----------------------");
 		int opreand1 = instruction.getIntOperand1();
 		this.pc.setValue(opreand1);
+		this.bEqual = false;
+		this.bGratherThan = false;
 	}
 	
 	private void halt() {
@@ -232,6 +234,7 @@ public class CPU {
 			int opreand1 = instruction.getIntOperand1();
 			this.pc.setValue(opreand1);
 		}
+		this.bGratherThan = false;
 	}
 	
 	private void gej() {

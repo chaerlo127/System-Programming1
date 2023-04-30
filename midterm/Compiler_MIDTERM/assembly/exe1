@@ -1,13 +1,13 @@
 		.header
-		a 5
-		b 0
+		a 0
+		b 4
 		
 		.code
 		movea mar @a
 		movec mbr 10
 		sto
 		movea mar @b
-		movec mbr 0
+		movec mbr 5
 		sto
 start:
 		movea mar @a

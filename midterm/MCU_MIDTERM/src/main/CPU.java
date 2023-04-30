@@ -1,3 +1,5 @@
+package main;
+import constant.Constant;
 import instruction_design.SOperand;
 import instruction_design.SOperator;
 
@@ -46,49 +48,56 @@ public class CPU {
 	}
 
 
-	public void start() {
+	public String start(String processName) {
 		this.eState = EState.eRunning;
-		this.run(); // 원래는 thread 의 역할임. 
+		return this.run(processName); // 원래는 thread 의 역할임. 
 	}
 	
 	// 무한 루핑 (polling) 
-	private void run() {
+	private String run(String processName) {
+		System.out.println("[This Running Process Name]: " + processName);
+		
+		StringBuilder sb = new StringBuilder();
+		sb.append("<html>");
+		sb.append("[This Running Process Name]: " + processName).append("<br>");
+		
 		while (this.eState == EState.eRunning) {
-			this.fetch();
+			this.fetch(sb);
 			this.decode();
-			this.execute();
-			
-//			checkInterrupt(); : cpu에게 내 일도 해달라고 부탁을 하는 것을 의미함. context switching 확인
-//			io interrupt가 os가 없어도 interrupt를 보낼 수 있음. 
+			this.execute(sb);
 		}
+		return sb.toString();
 	}
 	
 	/**
 	 * cpu instruction cycle method
 	 */
 	
-	public void fetch() {
-		instruction = new Instruction(this.memory.getMemory().get(cs.getValue() + pc.getValue()));
+	public void fetch(StringBuilder sb) {
 		
+		
+		instruction = new Instruction(this.memory.getMemory().get(cs.getValue() + pc.getValue()));
 		System.out.println(this.pc.value + " : " + instruction.getOperator());
+		sb.append(this.pc.value + " : " + instruction.getOperator()).append("<br>");
+		
 	}
 
 	public void decode() {
 	}
 
-	public void execute() {
+	public void execute(StringBuilder sb) {
 		switch(instruction.getOperator()) {
 		case MOVEA: moveA(); break;
 		case MOVEC: moveC(); break;
 		case MOVER: moveR(); break;
 		case STO: sto(); break;
 		case LDA: lda(); break;
-		case JMP: jump(); break;
+		case JMP: jump(sb); break;
 		case GTJ: gtj(); break;
 		case GEJ: gej(); break;
 		case AND: break;
 		case NOT: break;
-		case HALT: halt(); break;
+		case HALT: halt(sb); break;
 		case ADDR: addR(); break;
 		case ADDC: addC(); break;
 		case SUBR: subR(); break;
@@ -208,16 +217,21 @@ public class CPU {
 		}
 	}
 	
-	private void jump() {
+	private void jump(StringBuilder sb) {
 		System.out.println("----------------------jump----------------------");
+		sb.append("----------------------jump----------------------").append("<br>");
+		sb.append(this.memory.showDS()).append("<br>");
+		
 		int opreand1 = instruction.getIntOperand1();
 		this.pc.setValue(opreand1);
 		this.bEqual = false;
 		this.bGratherThan = false;
 	}
 	
-	private void halt() {
+	private void halt(StringBuilder sb) {
 		this.eState = EState.eStopped;
+		System.out.println();
+		sb.append("</html>");
 	}
 
 	
@@ -273,6 +287,7 @@ public class CPU {
 		return Integer.parseInt(command, 16);
 	}
 	
+	
 	private class Instruction {
 		private int operator;
 		private int operand1;
@@ -281,8 +296,8 @@ public class CPU {
 		public Instruction(String line) {
 			String[] tokens = line.split(" ");
 			this.operator = changeStringToInt(tokens[0]);
-			this.operand1 = -1;
-			this.operand2 = -1;
+			this.operand1 = Integer.MAX_VALUE;
+			this.operand2 = Integer.MAX_VALUE;
 
 			if (tokens.length > 1) {
 				this.operand1 = changeStringToInt(tokens[1]);

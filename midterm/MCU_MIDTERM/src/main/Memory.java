@@ -1,3 +1,6 @@
+package main;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.Scanner;
 import java.util.Vector;
 
@@ -5,7 +8,7 @@ import java.util.Vector;
 public class Memory {
 	private Vector<String> memory;
 	public Vector<String> getMemory() {return memory;}
-
+	public Scanner scanner;
 	private int[] dataSegment;
 	
 	private CPU.Register mar;
@@ -16,27 +19,33 @@ public class Memory {
 		this.dataSegment = new int[9];
 	}
 	
-	public void parse(Scanner scanner) {
+	public void setFile(File file) {
+		try {
+			scanner = new Scanner(file);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void parse() {
 		while(scanner.hasNext()) {
 			String token = scanner.nextLine();
 			if(!token.isEmpty()) {
 				this.memory.add(token);
 			}
 		}
+		scanner.close();
 	}
 	
 	public void associate(CPU.Register mar, CPU.Register mbr) {
-		// 메모리를 장착하면, cpu mar, mbr을 memory와 연결함.
 		this.mar = mar;
 		this.mbr = mbr;
 		
 	}
 
 	public void load() {
-		// MAR 주소 읽어오기 
 		int address = mar.getValue();
 		mbr.setValue(dataSegment[address]);
-//		mbr.setValue(this.memory.get(address)); // 메모리를 읽어서 집어넣자 
 	}
 	
 	
@@ -44,6 +53,16 @@ public class Memory {
 		int address = mar.getValue();
 		int value = mbr.getValue();
 		dataSegment[address] = value;
+	}
+	
+	public String showDS() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("[data segment] ");
+		for(int i = 0 ; i <dataSegment.length; i++) {
+			sb.append("indxex: " + i  +  " -> size: "+ dataSegment[i]).append(", ");
+		}
+		System.out.println(sb.toString());
+		return sb.toString();
 	}
 
 }

@@ -99,6 +99,7 @@ public class SUI extends JFrame {
 		// 공용 데이터
 		symbolTable = new SSymbolTable();
 		statements = new Vector<SStatement>();
+		generationCode = new Vector<>();
 
 		lex = new SLex();
 		parser = new SParser();
@@ -109,6 +110,7 @@ public class SUI extends JFrame {
 		while(this.exitButton) {
 			if(!files.isEmpty()) {
 				File file = files.remove(0);
+				reset();
 				this.lex.initialize(file);
 				// parser
 				parser.parse(this.lex, symbolTable, statements); // 어떤 파일을 파싱해라

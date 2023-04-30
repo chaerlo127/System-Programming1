@@ -1,6 +1,7 @@
 package main;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -60,9 +61,13 @@ public class SUI extends JFrame {
 		
 		JPanel showPanel = new JPanel();
 		showPanel.setBackground(Color.white);
+		
 		list = new JLabel();
 		list.setHorizontalAlignment(JLabel.CENTER);
-		showPanel.add(list);
+		
+		JScrollPane jScrollPane = new JScrollPane(list);
+		jScrollPane.setPreferredSize(new Dimension(500, 450));
+		showPanel.add(jScrollPane);
 		
 		this.add(btnPanel, BorderLayout.NORTH);
 		this.add(insBtnPanel, BorderLayout.SOUTH);

@@ -30,7 +30,13 @@ start:
 		mover ac1 mbr
 		movec ac2 1
 		addr ac1 ac2
-		mover mar ac1
+		mover mbr ac1
+		sto
+		movea mar @i
+		lda
+		mover ac1 mbr
+		movec ac2 1
+		addr ac1 ac2
 		mover mbr ac1
 		sto
 		jump start

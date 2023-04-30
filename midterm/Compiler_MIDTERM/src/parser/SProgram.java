@@ -16,6 +16,7 @@ public class SProgram implements INode {
 	@Override
 	public String parse(SLex lex) {
 		String token = lex.getToken();
+		
 		if (token.compareTo(".header") == 0) {
 			token = this.header.parse(lex);
 		}

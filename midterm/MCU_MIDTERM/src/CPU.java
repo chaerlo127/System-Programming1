@@ -1,3 +1,5 @@
+import instruction_design.SOperand;
+import instruction_design.SOperator;
 
 public class CPU {
 	/**
@@ -19,8 +21,13 @@ public class CPU {
 	 * register
 	 */
 	private IR ir;
-	public Register mar, mbr;
-	public Register cs, pc, ac; // code segment register, program counter
+	public Register mbr;
+	public Register mar, cs, pc, ac1, ac2; // code segment register, program counter
+	private Instruction instruction;
+	
+	
+	private boolean bGratherThan;
+	private boolean bEqual;
 	
 	/**
 	 * constructor
@@ -31,64 +38,13 @@ public class CPU {
 		mbr = new Register();
 		cs = new Register();
 		pc = new Register();
-		ac = new Register();
+		ac1 = new Register();
+		ac2 = new Register();
+		
+		this.bEqual = false;
+		this.bGratherThan = false;
 	}
 
-	
-	/**
-	 * cpu instruction cycle method
-	 */
-	
-	// 메모리에서 instruction을 가져옴.
-	// PC + code segment를 더해서 위치를 찾고 가져옴 (IR에 가져다 두는 것까지가 fetch)
-	public void fetch() {
-		System.out.println("fetch");
-		// 1. MAR <- CS + PC : Instruction이 들어가 있는 주소
-		mar.setValue(cs.getValue() + pc.getValue());
-		memory.load();
-		// 2. MBR = memory.load() : 메모리 보고 로드를 해라.
-		ir.setValue(mbr.getValue());
-		// 3. IR = MBR : IR에다가 MBR를 집어넣는다.
-	}
-
-	public void decode() {
-		System.out.println("decode");
-		// 명령어에 따라서 주소가 들어와있을 수도 있고 값이 들어가 있을 수도 있음.
-		
-		// load operand
-	}
-
-	public void execute() {
-		pc.setValue(pc.getValue() + 1); // pc에 값을 넣어줌.
-		
-		System.out.println("execute");
-		
-		// 실행한다.
-		switch(ir.getOperator()) {
-		case eHalt: this.halt(); break;
-		case eAdd: this.add(); break;
-		default: break;
-		}
-	}
-	
-	/**
-	 * operator method
-	 * 
-	 * */
-	public void halt() {
-		this.eState = EState.eStopped;
-	}
-	
-	private void add() {
-		// ir 뒤에 있는 것은 operand를 다시 로드를 해서 mbr에서 저장을 하고, ac에 값을 이미 저장이 되어 있어야 함.
-		// load는 mbr까지
-		// add : ac + mbr 값  => ac에 저장
-		mar.setValue(ir.getOperand());
-		memory.load();// mbr에 값이 저장됨. 
-		
-		// alu가 실제 값을 실행 하는 것임.
-		ac.setValue(ac.getValue() + mbr.getValue());
-	}
 
 	public void start() {
 		this.eState = EState.eRunning;
@@ -96,9 +52,7 @@ public class CPU {
 	}
 	
 	// 무한 루핑 (polling) 
-	public void run() {
-		// callback: 나보다 밑에 있는 서비스가 상위 서비스를 호출을 하게 만드는 것임.
-		// 다 정확하게 만드려면 thread로 만들어야 함.
+	private void run() {
 		while (this.eState == EState.eRunning) {
 			this.fetch();
 			this.decode();
@@ -110,6 +64,184 @@ public class CPU {
 	}
 	
 	/**
+	 * cpu instruction cycle method
+	 */
+	
+	public void fetch() {
+		instruction = new Instruction(this.memory.getMemory().get(cs.getValue() + pc.getValue()));
+		
+		System.out.println(this.pc.value + " : " + instruction.getOperator());
+	}
+
+	public void decode() {
+	}
+
+	public void execute() {
+		switch(instruction.getOperator()) {
+		case MOVEA: moveA(); break;
+		case MOVEC: moveC(); break;
+		case MOVER: moveR(); break;
+		case STO: sto(); break;
+		case LDA: lda(); break;
+		case JMP: jump(); break;
+		case GTJ: gtj(); break;
+		case GEJ: gej(); break;
+		case AND: break;
+		case NOT: break;
+		case HALT: halt(); break;
+		case ADDR: addR(); break;
+		case ADDC: addC(); break;
+		case SUBR: subR(); break;
+		case SUBC: subC(); break;
+		case MULR: mulR(); break;
+		case MULC: mulC(); break;
+		case DIVR: divR(); break;
+		case DIVC: divC(); break;
+		}
+		
+		pc.setValue(pc.getValue() + 1);
+	}
+	
+	/**
+	 * operator method
+	 * 
+	 * */
+	
+	private void moveA() { // move address value to register
+		Register opreand1 = instruction.getOperand1();
+		int opreand2 = instruction.getIntOperand2();
+		if(opreand1 != null) {
+			opreand1.setValue(opreand2);
+		}
+		
+	}
+	
+	private void moveC() { // move constant to register
+		Register opreand1 = instruction.getOperand1();
+		if(opreand1 != null) {
+			opreand1.setValue(instruction.getIntOperand2());
+		}
+	}
+	
+	private void moveR() { // move register to register
+		Register opreand1 = instruction.getOperand1();
+		Register opreand2 = instruction.getOperand2();
+		if(opreand1 != null && opreand2 != null) {
+			opreand1.setValue(opreand2.getValue());
+		}
+	}
+	
+	private void addR() {
+		Register opreand1 = instruction.getOperand1();
+		Register opreand2 = instruction.getOperand2();
+		
+		if(opreand1 != null && opreand2 != null) {
+			opreand1.setValue(opreand1.getValue() + opreand2.getValue());
+		}
+	}
+	
+	private void addC() {
+		Register opreand1 = instruction.getOperand1();
+		int opreand2 = instruction.getIntOperand2();
+		if(opreand1 != null) {
+			opreand1.setValue(opreand1.getValue() + opreand2);
+		}
+	}
+	
+	
+	private void subR() {
+		Register opreand1 = instruction.getOperand1();
+		Register opreand2 = instruction.getOperand2();
+		
+		if(opreand1 != null && opreand2 != null) {
+			int vaule1 = opreand1.getValue();
+			int value2 = opreand2.getValue();
+			opreand1.setValue(opreand1.getValue() - opreand2.getValue());
+			if(vaule1 == value2) this.bEqual = true;
+			if(vaule1 > value2) this.bGratherThan = true;
+		}
+	}
+	
+	private void subC() {
+		Register opreand1 = instruction.getOperand1();
+		int opreand2 = instruction.getIntOperand2();
+		if(opreand1 != null) {
+			int vaule1 = opreand1.getValue();
+			int value2 = opreand2;
+			opreand1.setValue(opreand1.getValue() - opreand2);
+			if(vaule1 == value2) this.bEqual = true;
+			if(vaule1 > value2) this.bGratherThan = true;
+		}
+	}
+	
+	private void mulR() {
+		Register opreand1 = instruction.getOperand1();
+		Register opreand2 = instruction.getOperand2();
+		
+		if(opreand1 != null && opreand2 != null) {
+			opreand1.setValue(opreand1.getValue() * opreand2.getValue());
+		}
+	}
+	
+	private void mulC() {
+		Register opreand1 = instruction.getOperand1();
+		int opreand2 = instruction.getIntOperand2();
+		if(opreand1 != null) {
+			opreand1.setValue(opreand1.getValue() * opreand2);
+		}
+	}
+	
+	private void divR() {
+		Register opreand1 = instruction.getOperand1();
+		Register opreand2 = instruction.getOperand2();
+		
+		if(opreand1 != null && opreand2 != null) {
+			opreand1.setValue(opreand1.getValue() / opreand2.getValue());
+		}
+	}
+	
+	private void divC() {
+		Register opreand1 = instruction.getOperand1();
+		int opreand2 = instruction.getIntOperand2();
+		if(opreand1 != null) {
+			opreand1.setValue(opreand1.getValue() / opreand2);
+		}
+	}
+	
+	private void jump() {
+		System.out.println("----------------------jump----------------------");
+		int opreand1 = instruction.getIntOperand1();
+		this.pc.setValue(opreand1);
+	}
+	
+	private void halt() {
+		this.eState = EState.eStopped;
+	}
+
+	
+	private void lda() {
+		this.memory.load();
+	}
+
+	private void sto() {
+		this.memory.store();
+	}
+	
+	private void gtj() {
+		if(this.bGratherThan) {
+			int opreand1 = instruction.getIntOperand1();
+			this.pc.setValue(opreand1);
+		}
+	}
+	
+	private void gej() {
+		if(this.bEqual || this.bGratherThan) {
+			int opreand1 = instruction.getIntOperand1();
+			this.pc.setValue(opreand1);
+		}
+	}
+	
+	/**
 	 * inner class
 	 *
 	 */
@@ -117,7 +249,7 @@ public class CPU {
 		protected int value;
 		
 		public Register() {
-			this.value = 0;
+
 		}
 		public int getValue() {
 			return value;
@@ -129,19 +261,71 @@ public class CPU {
 		
 	}
 	
-	private class IR extends Register{
-		public EOperator getOperator() {
-			int operator = value >> 24; // 4 바이트이므로 3개를 오른쪽으로 당겨서 초기화를 시킨다. short => 2 byte, int => 4 byte
-			EOperator eOperator = EOperator.values()[operator]; // operator의 값을 찾음, 서수로 찾고 나서 enum으로 바꾼 것임.
-			return eOperator;
-		}
-		public int getOperand() {
-			// bit-wise operation
-			int operand = value & 0x00FFFFFF; // 앞에 8비트를 뜯어낸 것임. 앞에 있는 operator를 지운 것임. 32비트에서 8비트는 0으로 채우고 24비트만 가지고 오는 것임.
-			// 오른쪽을 다 가지고 있어야 함.
-			// 왼쪽 8bit는 operator, 오른쪽 24bit는 operand의 값을 가지고 있음.
-			return operand;
-		}
+	public class IR extends Register{
+		
 	}
+	
+	public int changeStringToInt(String command) {
+		command = command.replace("0x", "");
+		return Integer.parseInt(command, 16);
+	}
+	
+	private class Instruction {
+		private int operator;
+		private int operand1;
+		private int operand2;
 
+		public Instruction(String line) {
+			String[] tokens = line.split(" ");
+			this.operator = changeStringToInt(tokens[0]);
+			this.operand1 = -1;
+			this.operand2 = -1;
+
+			if (tokens.length > 1) {
+				this.operand1 = changeStringToInt(tokens[1]);
+			}
+			if (tokens.length > 2) {
+				this.operand2 = changeStringToInt(tokens[2]);
+			}
+		}
+		
+		public SOperator getOperator() {
+			for(SOperator operator: SOperator.values()) {
+				if(operator.getCode() == this.operator) {
+					return operator;
+				}
+			}return null;
+		}
+
+		public Register getOperand1() {
+			return returnOperand(this.operand1);
+		}
+
+		public Register getOperand2() {
+			return returnOperand(this.operand2);
+		}
+		
+		private Register returnOperand(int operand) {
+			if(operand == SOperand.MAR.getCode()) {
+				return mar;
+			}else if(operand == SOperand.MBR.getCode()) {
+				return mbr;
+			}else if(operand == SOperand.AC1.getCode()) {
+				return ac1;
+			}else if(operand == SOperand.AC2.getCode()) {
+				return ac2;
+			}
+			return null;
+		}
+		
+		public int getIntOperand1() {
+			return this.operand1;
+		}
+		
+		public int getIntOperand2() {
+			return this.operand2;
+		}
+
+
+	}
 }

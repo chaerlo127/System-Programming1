@@ -1,5 +1,51 @@
 		.header
-		$DS 12
+		.data 8
+		Object 0
+		Result4
+		.stack 4096
+		.heap 4096
+		.code 
+		object = new Object();
+		result = object.method(3, 4);
+		accesslink - stack.new(address);
+		move accessLink stacktop // activation size 만큼 더해줌. 
+		// 스택에서 메모리 사이즈만큼 만들어서 return을 해줌
+			ReturnValue = Stack.new(int); // 1. return 
+			Param1 = Stack.new(int); // 2. 파라미터를 위한 메모리 확보 
+			Param2 = Stack.new(int);
+			ReturnAddress = Stack.new(address);// 3. 돌아올 주소를 위한 메모리 확보 
+			move Param1 3
+			move Param2 4
+			move returnAddress returnMethod // returnAddress에 returnMethod를 저장해둠.
+			jump method
+		returnMethod
+		move result returnValue
+		move stacktop accesslink
+		System.out.println(result);
+		exit(0);
+		method:
+		// local address 는 여기서 만들기 
+		// 메모리에서 메모리를 넘기면 안됨. 메모리는 레지스터로 옮겨서 진행해야 함. 
+			Result = Stack.new(int); // 4. 로컬 주소를 위한 메모리 확보
+			move this.0 param1
+			move this.4 param2
+			move r1 this.0
+			move r2 this.4
+			add r1 r2 // 이러면 안됨 일단 됐다고 치자고 
+			move Result r1
+			this.ox = x;
+			this.oy = y;
+			result = this.ox + this.oy;
+			// return result;
+			move returnVaule result
+			// stacktop의 0번지가 return의 시작주소이기 때문에 이 return address가 있는 것
+			jump returnAddress
+			
+			
+			
+			
+		// 함수를 하다가 다시 다른 함수를 호출하면 stacktop 에는 return value를 넣어줘야 하기때문에 
+			
 		count 0
 		sum 4
 		i 8

@@ -2,6 +2,8 @@
 		count 0
 		sum 4
 		i 8
+		input 12
+		keyboard 200
 		
 		.code
 		movea mar @count
@@ -42,4 +44,9 @@ start:
 		jump start
 end:	
 		halt
+callback: 
+		move mar @keyboard
+		lda
+		move mar @input
+		store
 .end

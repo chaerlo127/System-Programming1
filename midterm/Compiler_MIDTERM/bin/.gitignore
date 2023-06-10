@@ -1,7 +1,6 @@
-/constant/
-/main/
 /code_generator/
-/parser/
+/constant/
+/instruction_design/
 /lex/
-/exe`
-/exe1
+/main/
+/parser/

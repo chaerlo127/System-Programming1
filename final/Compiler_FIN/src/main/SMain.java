@@ -3,6 +3,7 @@ package main;
 import java.io.File;
 import java.util.Vector;
 
+import code_generator.SCodeGenerator;
 import lex.SLex;
 import parser.SParser;
 import parser.SStatement;
@@ -13,7 +14,8 @@ public class SMain {
 
 	private SSymbolTable symbolTable;
 	private Vector<SStatement> statements;
-//	private Vector<String> generationCode;
+	private SCodeGenerator codeGenerator;
+	private Vector<String> generationCode;
 	
 	private SLex lex;
 	private SParser parser;
@@ -29,16 +31,19 @@ public class SMain {
 	private void run() {
 		this.lex.initialize(new File("assembly/exe"));
 		parser.parse(this.lex, symbolTable, statements); // 어떤 파일을 파싱해라
+		codeGenerator.connect(symbolTable, statements, generationCode);
+		codeGenerator.generate();
+		codeGenerator.createExeFile("exe");
 	}
 
 	private void initialize() {
 		// 공용 데이터
 		symbolTable = new SSymbolTable();
 		statements = new Vector<SStatement>();
-//		generationCode = new Vector<>();
+		generationCode = new Vector<>();
 		lex = new SLex();
 		parser = new SParser();
-//		codeGenerator = new SCodeGenerator();  
+		codeGenerator = new SCodeGenerator();  
 
 //		this.files = new Vector<>();
 	}

@@ -1,7 +1,7 @@
 		.header
-		keyboard 2000
-		monitor 3000
-		random 4000
+		keyboard 100
+		monitor 200
+		random 300
 		num 0
 		total 4
 		totalAvg 8
@@ -48,10 +48,11 @@ start:
 		loada @eng
 		storea 8
 		// 여기서 set 위치 자동 저장 
-		jump @set
+		sjump @set
 		spop 20
 		// add
 		loadm @add
+		sjump @add
 		loadm @avg
 		sloada 0
 		storea @avg
@@ -69,18 +70,18 @@ set:
 		hstorea 0
 		sloada 8
 		hstorea 4
-		jump s12
+		sjump 12
 		halt
 add:
 		hloada 0
 		hadda 4
 		hstorea 8
-		jumps 4
+		sjump 4
 		halt
 avg:
 		hloada 12
 		hdivc 2
-		storea s0
-		jumps 4
+		sstorea 0
+		sjump 4
 		halt
 .end

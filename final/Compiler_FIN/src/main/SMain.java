@@ -1,0 +1,50 @@
+package main;
+
+import java.io.File;
+import java.util.Vector;
+
+import lex.SLex;
+import parser.SParser;
+import parser.SStatement;
+import parser.SSymbolEntity;
+import parser.SSymbolTable;
+
+public class SMain {
+
+	private SSymbolTable symbolTable;
+	private Vector<SStatement> statements;
+//	private Vector<String> generationCode;
+	
+	private SLex lex;
+	private SParser parser;
+	
+//	private Vector<File> files;
+	public static void main(String[] args) {
+		SMain main = new SMain();
+		main.initialize();
+		main.run();
+		main.finalize();
+	}
+
+	private void run() {
+		this.lex.initialize(new File("assembly/exe"));
+		parser.parse(this.lex, symbolTable, statements); // 어떤 파일을 파싱해라
+	}
+
+	private void initialize() {
+		// 공용 데이터
+		symbolTable = new SSymbolTable();
+		statements = new Vector<SStatement>();
+//		generationCode = new Vector<>();
+		lex = new SLex();
+		parser = new SParser();
+//		codeGenerator = new SCodeGenerator();  
+
+//		this.files = new Vector<>();
+	}
+	public void finalize() {
+		for (SSymbolEntity se: this.symbolTable) {
+			System.out.println(se.getVariableName() + " " + se.getLabel());
+		}
+	}
+}

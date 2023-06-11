@@ -1,0 +1,86 @@
+		.header
+		keyboard 2000
+		monitor 3000
+		random 4000
+		num 0
+		total 4
+		totalAvg 8
+		kor 12
+		eng 16
+		avg 20
+		i 24
+		.heap
+		Student 30
+		.code
+		loada @keyboard
+		storea @num
+		loadc 0
+		storea @total
+		loadc 0
+		storea @totalAvg
+		loadc 0
+		storea @i
+start:
+		loada @i
+		suba @num
+		gtj end
+		loada @random
+		storea @kor
+		loada @random
+		storea @eng
+		// kor
+		hpush 4
+		hloadc 0
+		hstorea 0
+		// eng
+		hpush 4
+		hloadc 0
+		hstorea 4
+		// sum
+		hpush 4
+		hloadc 0
+		hstorea 8
+		// set
+		loadm @set
+		spush 20
+		loada @kor
+		storea 4
+		loada @eng
+		storea 8
+		// 여기서 set 위치 자동 저장 
+		jump @set
+		spop 20
+		// add
+		loadm @add
+		loadm @avg
+		sloada 0
+		storea @avg
+		spop 20
+		loada @avg
+		storea @monitor
+		loada @total
+		adda @avg
+		storea @total
+		jump start
+end:	
+		halt
+set:
+		sloada 4
+		hstorea 0
+		sloada 8
+		hstorea 4
+		jump s12
+		halt
+add:
+		hloada 0
+		hadda 4
+		hstorea 8
+		jumps 4
+		halt
+avg:
+		hloada 12
+		hdivc 2
+		storea s0
+		jumps 4
+		halt
+.end

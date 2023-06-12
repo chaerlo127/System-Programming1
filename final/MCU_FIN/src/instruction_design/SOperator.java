@@ -45,27 +45,27 @@ public enum SOperator {
 	SJMP(0x2A, "jump", "sjump"),
 	LOADM(0x2B, "함수 불러오기", "loadm"),
 	STOREA(0x2C, "레지스터 내 값 저장하기", "storea"),
-	HSTOREA(0xD, "레지스터 내 값 저장하기", "hstorea"),
+	HSTOREA(0x2D, "레지스터 내 값 저장하기", "hstorea"),
 	SSTOREA(0x2E, "레지스터 내 값 저장하기", "sstorea"),
 	;
-	
+
 	private int code;
 	private String description;
 	private String assemblyCode;
-	
+
 	public int getCode() {
 		return code;
 	}
 	public String getAssemblyCode() {
 		return assemblyCode;
 	}
-	
+
 	SOperator(int code, String description, String assemblyCode) {
 		this.code = code;
 		this.description = description;
 		this.assemblyCode = assemblyCode;
 	}
-	
+
 	public static SOperator findByAssemblyCode(String assemblyCode) {
 		for(SOperator operator: SOperator.values()) {
 			if(assemblyCode.equals(operator.getAssemblyCode())) {
@@ -74,6 +74,6 @@ public enum SOperator {
 		}
 		return null;
 	}
-	
+
 
 }

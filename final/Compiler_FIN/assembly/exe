@@ -44,19 +44,20 @@ start:
 		loadm @set
 		spush 20
 		loada @kor
-		storea 4
+		sstorea 8
 		loada @eng
-		storea 8
-		// 여기서 set 위치 자동 저장 
-		jump @set
+		sstorea 12
+		sjump @set
 		spop 20
 		// add
 		loadm @add
 		spush 20
-		jump @add
+		sjump @add
+		spop 20
+		// avg
 		loadm @avg
 		spush 20
-		jump @avg
+		sjump @avg
 		sloada 0
 		storea @average
 		spop 20
@@ -65,26 +66,26 @@ start:
 		loada @total
 		adda @avg
 		storea @total
+		loada @i
+		addc 1
+		storea @i
 		jump start
 end:	
 		halt
 set:
-		sloada 4
-		hstorea 0
 		sloada 8
+		hstorea 0
+		sloada 12
 		hstorea 4
-		sjump 12
-		halt
+		sjump 4
 add:
 		hloada 0
 		hadda 4
 		hstorea 8
 		sjump 4
-		halt
 avg:
 		hloada 12
 		hdivc 2
 		sstorea 0
 		sjump 4
-		halt
 .end

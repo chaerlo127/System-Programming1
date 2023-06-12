@@ -5,377 +5,409 @@ import instruction_design.SOperator;
 import java.util.Scanner;
 
 public class CPU {
-	/**
-	 * Enumeration
-	 */
-	private enum EState {
-		eStopped, eRunning
-	}
+    /**
+     * Enumeration
+     */
+    private enum EState {
+        eStopped, eRunning
+    }
 
-	public enum EOperator{
-		eHalt,
-		eAdd
-	}
+    private enum ESegment{
+        NONE, DATA, HEAP, STACK;
+    }
 
-	private Memory memory;
-	private EState eState;
+    private Memory memory;
+    private EState eState;
 
-	public void associate(Memory memory) {this.memory = memory;}
+    private ESegment segment;
 
-	/**
-	 * register
-	 */
-	private IR ir;
-	public Register mbr;
-	public Register mar, cs, pc, ac1, ac2; // code segment register, program counter
-	private Instruction instruction;
+    public void associate(Memory memory) {
+        this.memory = memory;
+    }
 
-
-	private boolean bGratherThan;
-	private boolean bEqual;
-
-	/**
-	 * constructor
-	 */
-	public CPU() {
-		ir = new IR();
-		mar = new Register();
-		mbr = new Register();
-		cs = new Register();
-		pc = new Register();
-		ac1 = new Register();
-		ac2 = new Register();
-
-		this.bEqual = false;
-		this.bGratherThan = false;
-	}
+    /**
+     * register
+     */
+    private IR ir;
+    public Register mbr;
+    public Register mar, cs, pc, ac1, ac2; // code segment register, program counter
+    private Instruction instruction;
 
 
-	public String start(String processName) {
-		this.eState = EState.eRunning;
-		return this.run(processName); // 원래는 thread 의 역할임.
-	}
+    private boolean bGratherThan;
+    private boolean bEqual;
 
-	// 무한 루핑 (polling)
-	private String run(String processName) {
-		System.out.println("[This Running Process Name]: " + processName);
+    /**
+     * constructor
+     */
+    public CPU() {
+        ir = new IR();
+        mar = new Register();
+        mbr = new Register();
+        cs = new Register();
+        pc = new Register();
+        ac1 = new Register();
+        ac2 = new Register();
 
-		StringBuilder sb = new StringBuilder();
-		sb.append("<html>");
-		sb.append("[This Running Process Name]: " + processName).append("<br>");
-
-		while (this.eState == EState.eRunning) {
-			this.fetch(sb);
-			this.decode();
-			this.execute(sb);
-		}
-		return sb.toString();
-	}
-
-	/**
-	 * cpu instruction cycle method
-	 */
-
-	public void fetch(StringBuilder sb) {
-		instruction = new Instruction(this.memory.getMemory().get(cs.getValue() + pc.getValue()));
-		System.out.println(this.pc.value + " : " + instruction.getOperator());
-		sb.append(this.pc.value + " : " + instruction.getOperator()).append("<br>");
-
-	}
-
-	public void decode() {
-	}
-
-	public void execute(StringBuilder sb) {
-		switch(instruction.getOperator()) {
-			case LOADA: loada(); break;
-			case LOADC: loadc(); break;
-			case JMP: break;
-			case GTJ: break;
-			case GEJ: break;
-			case AND: break;
-			case NOT: break;
-			case HALT: break;
-			case ADDA: break;
-			case ADDC: break;
-			case SUBA: break;
-			case SUBC: break;
-			case MULA: break;
-			case MULC: break;
-			case DIVA: break;
-			case DIVC: break;
-			case HPUSH: break;
-			case HPOP: break;
-			case HLOADA: break;
-			case HLOADC: break;
-			case HADDA: break;
-			case HADDC: break;
-			case HSUBA: break;
-			case HMULA: break;
-			case HMULC: break;
-			case HDIVA: break;
-			case HDIVC: break;
-			case HJMP: break;
-			case SPUSH: break;
-			case SPOP: break;
-			case SLOADA: break;
-			case SLOADC: break;
-			case SADDA: break;
-			case SADDC: break;
-			case SSUBA: break;
-			case SSUBC: break;
-			case SMULA: break;
-			case SMULC: break;
-			case SDIVA: break;
-			case SDIVC: break;
-			case SJMP: break;
-			case LOADM: break;
-			case STOREA: storea(); break;
-			case HSTOREA: break;
-			case SSTOREA: break;
-
-		}
-
-		pc.setValue(pc.getValue() + 1);
-	}
+        this.bEqual = false;
+        this.bGratherThan = false;
+        segment = ESegment.NONE;
+    }
 
 
+    public String start(String processName) {
+        this.eState = EState.eRunning;
+        return this.run(processName); // 원래는 thread 의 역할임.
+    }
 
-	/**
-	 * operator method
-	 * */
+    // 무한 루핑 (polling)
+    private String run(String processName) {
+        System.out.println("[This Running Process Name]: " + processName);
 
+        StringBuilder sb = new StringBuilder();
 
-	private void loada() {
-		if(instruction.getOperand() == Constant.CPU.keyboard){
-			System.out.println("[학생의 수를 입력하세요!]");
-			Scanner scanner = new Scanner(System.in);
-			mbr.setValue(scanner.nextInt());
-			scanner.close();
-		}else if (instruction.getOperand() == Constant.CPU.random){
-			int score = (int)( Math.random() * 51 ) + 50;
-			mbr.setValue(score);
-		}else{
-			mar.setValue(instruction.getOperand());
-			memory.loadData();
-		}
-	}
+        while (this.eState == EState.eRunning) {
+            this.fetch(sb);
+            this.decode();
+            this.execute(sb);
+        }
+        return sb.toString();
+    }
 
-	private void loadc() {
-		mar.setValue(instruction.getOperand());
-	}
+    /**
+     * cpu instruction cycle method
+     */
 
-	private void storea() {
-		if(instruction.getOperand() == Constant.CPU.monitor){
-			// todo: 코드 생성
-		}else {
-			// mar에 주소를 저장해두고
-			mar.setValue(instruction.getOperand());
-			// mbr에 저장되어 있는 것을 찾아서 data segment 에 저장!
-			memory.storeData();
-		}
-	}
+    public void fetch(StringBuilder sb) {
+        instruction = new Instruction(this.memory.getMemory().get(cs.getValue() + pc.getValue()));
+        System.out.println(this.pc.value + " : " + instruction.getOperator());
+        sb.append(this.pc.value + " : " + instruction.getOperator()).append("<br>");
 
+    }
 
+    public void decode() {
+    }
 
-//	private void moveA() { // move address value to register
-//		Register opreand1 = instruction.getOperand1();
-//		int opreand2 = instruction.getIntOperand2();
-//		if(opreand1 != null) {
-//			opreand1.setValue(opreand2);
-//		}
-//
-//	}
-//
-//	private void moveC() { // move constant to register
-//		Register opreand1 = instruction.getOperand1();
-//		if(opreand1 != null) {
-//			opreand1.setValue(instruction.getIntOperand2());
-//		}
-//	}
-//
-//	private void moveR() { // move register to register
-//		Register opreand1 = instruction.getOperand1();
-//		Register opreand2 = instruction.getOperand2();
-//		if(opreand1 != null && opreand2 != null) {
-//			opreand1.setValue(opreand2.getValue());
-//		}
-//	}
-//
-//	private void addR() {
-//		Register opreand1 = instruction.getOperand1();
-//		Register opreand2 = instruction.getOperand2();
-//
-//		if(opreand1 != null && opreand2 != null) {
-//			opreand1.setValue(opreand1.getValue() + opreand2.getValue());
-//		}
-//	}
-//
-//	private void addC() {
-//		Register opreand1 = instruction.getOperand1();
-//		int opreand2 = instruction.getIntOperand2();
-//		if(opreand1 != null) {
-//			opreand1.setValue(opreand1.getValue() + opreand2);
-//		}
-//	}
-//
-//
-//	private void subR() {
-//		Register opreand1 = instruction.getOperand1();
-//		Register opreand2 = instruction.getOperand2();
-//
-//		if(opreand1 != null && opreand2 != null) {
-//			int vaule1 = opreand1.getValue();
-//			int value2 = opreand2.getValue();
-//			opreand1.setValue(opreand1.getValue() - opreand2.getValue());
-//			if(vaule1 == value2) this.bEqual = true;
-//			if(vaule1 > value2) this.bGratherThan = true;
-//		}
-//	}
-//
-//	private void subC() {
-//		Register opreand1 = instruction.getOperand1();
-//		int opreand2 = instruction.getIntOperand2();
-//		if(opreand1 != null) {
-//			int vaule1 = opreand1.getValue();
-//			int value2 = opreand2;
-//			opreand1.setValue(opreand1.getValue() - opreand2);
-//			if(vaule1 == value2) this.bEqual = true;
-//			if(vaule1 > value2) this.bGratherThan = true;
-//		}
-//	}
-//
-//	private void mulR() {
-//		Register opreand1 = instruction.getOperand1();
-//		Register opreand2 = instruction.getOperand2();
-//
-//		if(opreand1 != null && opreand2 != null) {
-//			opreand1.setValue(opreand1.getValue() * opreand2.getValue());
-//		}
-//	}
-//
-//	private void mulC() {
-//		Register opreand1 = instruction.getOperand1();
-//		int opreand2 = instruction.getIntOperand2();
-//		if(opreand1 != null) {
-//			opreand1.setValue(opreand1.getValue() * opreand2);
-//		}
-//	}
-//
-//	private void divR() {
-//		Register opreand1 = instruction.getOperand1();
-//		Register opreand2 = instruction.getOperand2();
-//
-//		if(opreand1 != null && opreand2 != null) {
-//			opreand1.setValue(opreand1.getValue() / opreand2.getValue());
-//		}
-//	}
-//
-//	private void divC() {
-//		Register opreand1 = instruction.getOperand1();
-//		int opreand2 = instruction.getIntOperand2();
-//		if(opreand1 != null) {
-//			opreand1.setValue(opreand1.getValue() / opreand2);
-//		}
-//	}
-//
-//	private void jump(StringBuilder sb) {
-//		System.out.println("----------------------jump----------------------");
-//		sb.append("----------------------jump----------------------").append("<br>");
-//		sb.append(this.memory.showDS()).append("<br>");
-//
-//		int opreand1 = instruction.getIntOperand1();
-//		this.pc.setValue(opreand1);
-//		this.bEqual = false;
-//		this.bGratherThan = false;
-//	}
-//
-//	private void halt(StringBuilder sb) {
-//		this.eState = EState.eStopped;
-//		System.out.println();
-//		sb.append("</html>");
-//	}
-//
-//
-//	private void lda() {
-//		this.memory.load();
-//	}
-//
-//	private void sto() {
-//		this.memory.store();
-//	}
-//
-//	private void gtj() {
-//		if(this.bGratherThan) {
-//			int opreand1 = instruction.getIntOperand1();
-//			this.pc.setValue(opreand1);
-//		}
-//		this.bGratherThan = false;
-//	}
-//
-//	private void gej() {
-//		if(this.bEqual || this.bGratherThan) {
-//			int opreand1 = instruction.getIntOperand1();
-//			this.pc.setValue(opreand1);
-//		}
-//	}
+    public void execute(StringBuilder sb) {
+        switch(instruction.getOperator()) {
+            case LOADA: loada(); break;
+            case LOADC: loadc(); break;
+            case JMP: jump(); break;
+            case GTJ: gtj(); break;
+            case GEJ: gej(); break;
+            case AND: break;
+            case NOT: break;
+            case HALT: haltProgram(); break;
+            case ADDA: segment = ESegment.DATA; adda(); break;
+            case ADDC: segment = ESegment.DATA; addc(); break;
+            case SUBA: segment = ESegment.DATA; suba(); break;
+            case SUBC: segment = ESegment.DATA; subc(); break;
+            case MULA: segment = ESegment.DATA; mula(); break;
+            case MULC: segment = ESegment.DATA; mulc(); break;
+            case DIVA: segment = ESegment.DATA; diva(); break;
+            case DIVC: segment = ESegment.DATA; divc(); break;
+            case HPUSH: hpush(); break;
+            case HPOP: hpop(); break;
+            case HLOADA: hloada(); break;
+            case HLOADC: hloadc(); break;
+            case HADDA: segment = ESegment.HEAP; adda(); break;
+            case HADDC: segment = ESegment.HEAP; addc(); break;
+            case HSUBA: segment = ESegment.HEAP; suba(); break;
+            case HSUBC: segment = ESegment.HEAP; subc(); break;
+            case HMULA: segment = ESegment.HEAP; mula(); break;
+            case HMULC: segment = ESegment.HEAP; mulc(); break;
+            case HDIVA: segment = ESegment.HEAP; diva(); break;
+            case HDIVC: segment = ESegment.HEAP; divc(); break;
+            case HJMP: break;
+            case SPUSH: spush(); break;
+            case SPOP: spop(); break;
+            case SLOADA: sloada(); break;
+            case SLOADC: loadc(); break;
+            case SADDA: segment = ESegment.STACK; adda(); break;
+            case SADDC: segment = ESegment.STACK; addc(); break;
+            case SSUBA: segment = ESegment.STACK; suba(); break;
+            case SSUBC: segment = ESegment.STACK; subc(); break;
+            case SMULA: segment = ESegment.STACK; mula(); break;
+            case SMULC: segment = ESegment.STACK; mulc(); break;
+            case SDIVA: segment = ESegment.STACK; diva(); break;
+            case SDIVC: segment = ESegment.STACK; divc(); break;
+            case SJMP: sjump(); break;
+            case LOADM: break;
+            case STOREA: storea(); break;
+            case HSTOREA: hstorea(); break;
+            case SSTOREA: sstorea(); break;
 
-	/**
-	 * inner class
-	 *
-	 */
-	public class Register{
-		protected int value;
-
-		public Register() {
-
-		}
-
-		public int getValue() {
-			return value;
-		}
-
-		public void setValue(int value) {
-			this.value = value;
-		}
-
-	}
-
-	public class IR extends Register{
-
-	}
-
-	public int changeStringToInt(String command) {
-		command = command.replace("0x", "");
-		return Integer.parseInt(command, 16);
-	}
+        }
+        pc.setValue(pc.getValue() + 1);
+    }
 
 
-	private class Instruction {
-		private int operator;
-		private int operand;
+    /**
+     * operator method
+     * */
 
-		public Instruction(String line) {
-			String[] tokens = line.split(" ");
-			this.operator = changeStringToInt(tokens[0]);
-			this.operand = Integer.MAX_VALUE;
+    private void haltProgram() {
+        this.eState = EState.eStopped;
+        System.out.println("[System the end]");
+    }
 
-			if (tokens.length > 1) {
-				this.operand = changeStringToInt(tokens[1]);
-			}
-		}
+    private void loada() {
+        if (instruction.getOperand() == Constant.CPU.keyboard) {
+            System.out.println("[학생 수를 입력하세요!]");
+            Scanner scanner = new Scanner(System.in);
+            mbr.setValue(scanner.nextInt());
+            scanner.close();
+        } else if (instruction.getOperand() == Constant.CPU.random) {
+            int score = (int) (Math.random() * 51) + 50;
+            mbr.setValue(score);
+        } else {
+            mar.setValue(instruction.getOperand());
+            memory.loadData();
+        }
+    }
 
-		public SOperator getOperator() {
-			for(SOperator operator: SOperator.values()) {
-				if(operator.getCode() == this.operator) {
-					return operator;
-				}
-			}return null;
-		}
+    private void loadc() {
+        mar.setValue(instruction.getOperand());
+    }
 
-		public int getOperand() {
-			return this.operand;
-		}
+    private void storea() {
+        if (instruction.getOperand() == Constant.CPU.monitor) {
+            System.out.println("[결과 값]: " + mbr.getValue());
+        } else {
+            // mar에 주소를 저장해두고
+            mar.setValue(instruction.getOperand());
+            // mbr에 저장되어 있는 것을 찾아서 data segment 에 저장!
+            memory.storeData();
+        }
+    }
 
-	}
+    private void adda() {
+        ac1.setValue(mbr.getValue());
+        // mar에 주소를 저장해두고,mbr로 불러오기
+        mar.setValue(instruction.getOperand());
+        if(segment.equals(ESegment.DATA)) memory.loadData();
+        else if(segment.equals(ESegment.HEAP)) memory.loadHeap();
+        else if (segment.equals(ESegment.STACK)) memory.loadStack();
+        segment = ESegment.NONE;
+        ac2.setValue(mbr.getValue());
+        // ac1, ac2를 이용해서 값을 변경
+        ac1.setValue(ac1.getValue() + ac2.getValue());
+
+
+    }
+
+    private void addc() {
+        // mbr 에 저장된 값을 ac1 에 이동
+        ac1.setValue(mbr.getValue());
+        // instruction 에 저장되어 있는 상수 값을 ac2 로 이동
+        ac2.setValue(instruction.getOperand());
+        ac1.setValue(ac1.getValue() + ac2.getValue());
+    }
+
+    private void suba() {
+        ac1.setValue(mbr.getValue());
+        // mar에 주소를 저장해두고,mbr로 불러오기
+        mar.setValue(instruction.getOperand());
+        if(segment.equals(ESegment.DATA)) memory.loadData();
+        else if(segment.equals(ESegment.HEAP)) memory.loadHeap();
+        else if (segment.equals(ESegment.STACK)) memory.loadStack();
+        segment = ESegment.NONE;
+        ac2.setValue(mbr.getValue());
+
+        if (ac1.getValue() == ac2.getValue()) this.bEqual = true;
+        if (ac1.getValue() > ac2.getValue()) this.bGratherThan = true;
+
+        // ac1, ac2를 이용해서 값을 변경
+        ac1.setValue(ac1.getValue() - ac2.getValue());
+    }
+
+    // todo: 사칙연산과 관련된 부분은 상수 더하는 부분은 heap, stack 다 필요 없음 하나로 통일해도 가능 변경 필요
+    private void subc() {
+        // mbr 에 저장된 값을 ac1 에 이동
+        ac1.setValue(mbr.getValue());
+        // instruction 에 저장되어 있는 상수 값을 ac2 로 이동
+        ac2.setValue(instruction.getOperand());
+
+        if (ac1.getValue() == ac2.getValue()) this.bEqual = true;
+        if (ac1.getValue() > ac2.getValue()) this.bGratherThan = true;
+
+        ac1.setValue(ac1.getValue() - ac2.getValue());
+    }
+
+    private void mula() {
+        ac1.setValue(mbr.getValue());
+        // mar에 주소를 저장해두고,mbr로 불러오기
+        mar.setValue(instruction.getOperand());
+        if(segment.equals(ESegment.DATA)) memory.loadData();
+        else if(segment.equals(ESegment.HEAP)) memory.loadHeap();
+        else if (segment.equals(ESegment.STACK)) memory.loadStack();
+        segment = ESegment.NONE;
+        ac2.setValue(mbr.getValue());
+        // ac1, ac2를 이용해서 값을 변경
+        ac1.setValue(ac1.getValue() * ac2.getValue());
+    }
+
+    private void mulc() {
+        // mbr 에 저장된 값을 ac1 에 이동
+        ac1.setValue(mbr.getValue());
+        // instruction 에 저장되어 있는 상수 값을 ac2 로 이동
+        ac2.setValue(instruction.getOperand());
+        ac1.setValue(ac1.getValue() * ac2.getValue());
+    }
+
+    private void diva() {
+        ac1.setValue(mbr.getValue());
+        // mar에 주소를 저장해두고,mbr로 불러오기
+        mar.setValue(instruction.getOperand());
+        if(segment.equals(ESegment.DATA)) memory.loadData();
+        else if(segment.equals(ESegment.HEAP)) memory.loadHeap();
+        else if (segment.equals(ESegment.STACK)) memory.loadStack();
+        segment = ESegment.NONE;
+        ac2.setValue(mbr.getValue());
+        // ac1, ac2를 이용해서 값을 변경
+        ac1.setValue((int) (ac1.getValue() / ac2.getValue()));
+    }
+
+    private void divc() {
+        // mbr 에 저장된 값을 ac1 에 이동
+        ac1.setValue(mbr.getValue());
+        // instruction 에 저장되어 있는 상수 값을 ac2 로 이동
+        ac2.setValue(instruction.getOperand());
+        ac1.setValue((int) (ac1.getValue() / ac2.getValue()));
+    }
+
+    private void gtj() {
+        if (this.bGratherThan) {
+            this.pc.setValue(instruction.getOperand());
+        }
+        this.bGratherThan = false;
+    }
+
+    private void gej() {
+        if (this.bEqual || this.bGratherThan) {
+            this.pc.setValue(instruction.getOperand());
+        }
+    }
+
+    private void jump() {
+        System.out.println("----------------------jump----------------------");
+        this.pc.setValue(instruction.getOperand());
+        this.bEqual = false;
+        this.bGratherThan = false;
+    }
+
+    // heap segment operator
+    private void hpush() {
+    }
+
+    private void hpop() {
+    }
+    private void hloada() {
+        mar.setValue(instruction.getOperand());
+        memory.loadHeap();
+    }
+    private void hloadc() {
+        mbr.setValue(instruction.getOperand());
+    }
+
+    private void hstorea() {
+        // mar에 주소를 저장해두고
+        mar.setValue(instruction.getOperand());
+        // mbr에 저장되어 있는 것을 찾아서 data segment 에 저장!
+        memory.storeHeap();
+    }
+
+    // stack segment operator
+    private void sloada() {
+        mar.setValue(instruction.getOperand());
+        memory.loadStack();
+    }
+    private void sstorea() {
+        mar.setValue(instruction.getOperand());
+        memory.storeStack();
+    }
+    private void spop() {
+        memory.spop();
+    }
+
+    private void spush() {
+        memory.spush();
+    }
+
+    private void sjump() {
+        System.out.println("----------------------method jump----------------------");
+        mar.setValue(instruction.getOperand());
+        if(instruction.getOperand() == 4) {
+            memory.loadStack();
+            this.pc.setValue(mar.getValue());
+        }
+        else {
+            mar.setValue(4);
+            mbr.setValue(this.pc.getValue());
+            memory.storeStack();
+            this.pc.setValue(mar.getValue());
+        }
+
+        this.bEqual = false;
+        this.bGratherThan = false;
+    }
+
+    /**
+     * inner class
+     *
+     */
+    public class Register{
+        protected int value;
+
+        public Register() {
+
+        }
+
+        public int getValue() {
+            return value;
+        }
+
+        public void setValue(int value) {
+            this.value = value;
+        }
+
+    }
+
+    public class IR extends Register{
+
+    }
+
+    public int changeStringToInt(String command) {
+        command = command.replace("0x", "");
+        return Integer.parseInt(command, 16);
+    }
+
+
+    private class Instruction {
+        private int operator;
+        private int operand;
+
+        public Instruction(String line) {
+            String[] tokens = line.split(" ");
+            this.operator = changeStringToInt(tokens[0]);
+            this.operand = Integer.MAX_VALUE;
+
+            if (tokens.length > 1) {
+                this.operand = changeStringToInt(tokens[1]);
+            }
+        }
+
+        public SOperator getOperator() {
+            for(SOperator operator: SOperator.values()) {
+                if(operator.getCode() == this.operator) {
+                    return operator;
+                }
+            }return null;
+        }
+
+        public int getOperand() {
+            return this.operand;
+        }
+
+    }
 }

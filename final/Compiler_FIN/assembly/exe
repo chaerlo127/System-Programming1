@@ -23,7 +23,7 @@
 start:
 		loada @i
 		suba @num
-		gtj end
+		gej end
 		loada @random
 		storea @kor
 		loada @random
@@ -71,6 +71,11 @@ start:
 		storea @i
 		jump start
 end:	
+		loada @total
+		diva @num
+		storea @totalAvg
+		loada @totalAvg
+		storea @monitor
 		halt
 set:
 		sloada 8

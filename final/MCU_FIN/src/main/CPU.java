@@ -28,7 +28,6 @@ public class CPU {
     /**
      * register
      */
-    private IR ir;
     public Register mbr;
     public Register mar, cs, pc, ac1, ac2; // code segment register, program counter
     private Instruction instruction;
@@ -41,7 +40,6 @@ public class CPU {
      * constructor
      */
     public CPU() {
-        ir = new IR();
         mar = new Register();
         mbr = new Register();
         cs = new Register();
@@ -109,7 +107,7 @@ public class CPU {
             case HPUSH: hpush(); break;
             case HPOP: hpop(); break;
             case HLOADA: hloada(); break;
-            case HLOADC: hloadc(); break;
+            case HLOADC: loadc(); break;
             case HADDA: segment = ESegment.HEAP; adda(); break;
             case HADDC: segment = ESegment.HEAP; addc(); break;
             case HSUBA: segment = ESegment.HEAP; suba(); break;
@@ -159,6 +157,7 @@ public class CPU {
             scanner.close();
         } else if (instruction.getOperand() == Constant.CPU.random) {
             int score = (int) (Math.random() * 51) + 50;
+            System.out.println("--------------------------------------------------------------------------------[학생들의 랜덤 점수]: " + score);
             mbr.setValue(score);
         } else {
             mar.setValue(instruction.getOperand());
@@ -167,12 +166,12 @@ public class CPU {
     }
 
     private void loadc() {
-        mar.setValue(instruction.getOperand());
+        mbr.setValue(instruction.getOperand());
     }
 
     private void storea() {
         if (instruction.getOperand() == Constant.CPU.monitor) {
-            System.out.println("[결과 값]: " + mbr.getValue());
+            System.out.println("--------------------------------------------------------------------------------[결과 값]: " + mbr.getValue());
         } else {
             // mar에 주소를 저장해두고
             mar.setValue(instruction.getOperand());
@@ -192,7 +191,7 @@ public class CPU {
         ac2.setValue(mbr.getValue());
         // ac1, ac2를 이용해서 값을 변경
         ac1.setValue(ac1.getValue() + ac2.getValue());
-
+        mbr.setValue(ac1.getValue());
 
     }
 
@@ -202,6 +201,7 @@ public class CPU {
         // instruction 에 저장되어 있는 상수 값을 ac2 로 이동
         ac2.setValue(instruction.getOperand());
         ac1.setValue(ac1.getValue() + ac2.getValue());
+        mbr.setValue(ac1.getValue());
     }
 
     private void suba() {
@@ -219,9 +219,9 @@ public class CPU {
 
         // ac1, ac2를 이용해서 값을 변경
         ac1.setValue(ac1.getValue() - ac2.getValue());
+        mbr.setValue(ac1.getValue());
     }
 
-    // todo: 사칙연산과 관련된 부분은 상수 더하는 부분은 heap, stack 다 필요 없음 하나로 통일해도 가능 변경 필요
     private void subc() {
         // mbr 에 저장된 값을 ac1 에 이동
         ac1.setValue(mbr.getValue());
@@ -232,6 +232,7 @@ public class CPU {
         if (ac1.getValue() > ac2.getValue()) this.bGratherThan = true;
 
         ac1.setValue(ac1.getValue() - ac2.getValue());
+        mbr.setValue(ac1.getValue());
     }
 
     private void mula() {
@@ -245,6 +246,7 @@ public class CPU {
         ac2.setValue(mbr.getValue());
         // ac1, ac2를 이용해서 값을 변경
         ac1.setValue(ac1.getValue() * ac2.getValue());
+        mbr.setValue(ac1.getValue());
     }
 
     private void mulc() {
@@ -253,6 +255,7 @@ public class CPU {
         // instruction 에 저장되어 있는 상수 값을 ac2 로 이동
         ac2.setValue(instruction.getOperand());
         ac1.setValue(ac1.getValue() * ac2.getValue());
+        mbr.setValue(ac1.getValue());
     }
 
     private void diva() {
@@ -266,6 +269,7 @@ public class CPU {
         ac2.setValue(mbr.getValue());
         // ac1, ac2를 이용해서 값을 변경
         ac1.setValue((int) (ac1.getValue() / ac2.getValue()));
+        mbr.setValue(ac1.getValue());
     }
 
     private void divc() {
@@ -274,23 +278,26 @@ public class CPU {
         // instruction 에 저장되어 있는 상수 값을 ac2 로 이동
         ac2.setValue(instruction.getOperand());
         ac1.setValue((int) (ac1.getValue() / ac2.getValue()));
+        mbr.setValue(ac1.getValue());
     }
 
     private void gtj() {
         if (this.bGratherThan) {
-            this.pc.setValue(instruction.getOperand());
+            this.pc.setValue(instruction.getOperand()-1);
         }
         this.bGratherThan = false;
     }
 
     private void gej() {
         if (this.bEqual || this.bGratherThan) {
-            this.pc.setValue(instruction.getOperand());
+            this.pc.setValue(instruction.getOperand()-1);
         }
+        this.bGratherThan = false;
+        this.bEqual = false;
     }
 
     private void jump() {
-        System.out.println("----------------------jump----------------------");
+        System.out.println("----------------------jump---------------------");
         this.pc.setValue(instruction.getOperand());
         this.bEqual = false;
         this.bGratherThan = false;
@@ -305,9 +312,6 @@ public class CPU {
     private void hloada() {
         mar.setValue(instruction.getOperand());
         memory.loadHeap();
-    }
-    private void hloadc() {
-        mbr.setValue(instruction.getOperand());
     }
 
     private void hstorea() {
@@ -335,17 +339,18 @@ public class CPU {
     }
 
     private void sjump() {
-        System.out.println("----------------------method jump----------------------");
-        mar.setValue(instruction.getOperand());
         if(instruction.getOperand() == 4) {
+            mar.setValue(4);
+            System.out.println("----------------------method finish----------------------");
             memory.loadStack();
-            this.pc.setValue(mar.getValue());
+            this.pc.setValue(mbr.getValue());
         }
         else {
+            System.out.println("----------------------method jump----------------------");
             mar.setValue(4);
             mbr.setValue(this.pc.getValue());
             memory.storeStack();
-            this.pc.setValue(mar.getValue());
+            this.pc.setValue(instruction.getOperand());
         }
 
         this.bEqual = false;

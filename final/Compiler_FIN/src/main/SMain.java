@@ -47,9 +47,14 @@ public class SMain {
 
 //		this.files = new Vector<>();
 	}
+	
 	public void finalize() {
+		System.out.printf("%-15s %-15s %-15s","NAME", "VALUE", "LABEL");
+		System.out.println();
+		System.out.println("----------------------------------------");
 		for (SSymbolEntity se: this.symbolTable) {
-			System.out.println(se.getVariableName() + " " + se.getLabel());
+			System.out.printf("%-15s %-15s %-15s", se.getVariableName(), se.getValue(), se.getLabel());
+			System.out.println();
 		}
 	}
 }

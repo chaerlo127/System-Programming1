@@ -1,13 +1,13 @@
 		.header
-		keyboard 100
-		monitor 200
-		random 300
+		keyboard 50
+		monitor 100
+		random 200
 		num 0
 		total 4
 		totalAvg 8
 		kor 12
 		eng 16
-		avg 20
+		average 20
 		i 24
 		.heap
 		Student 30
@@ -48,16 +48,19 @@ start:
 		loada @eng
 		storea 8
 		// 여기서 set 위치 자동 저장 
-		sjump @set
+		jump @set
 		spop 20
 		// add
 		loadm @add
-		sjump @add
+		spush 20
+		jump @add
 		loadm @avg
+		spush 20
+		jump @avg
 		sloada 0
-		storea @avg
+		storea @average
 		spop 20
-		loada @avg
+		loada @average
 		storea @monitor
 		loada @total
 		adda @avg

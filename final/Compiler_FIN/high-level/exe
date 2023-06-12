@@ -10,7 +10,7 @@ int main(){
 		Student student = new Student(); 
 		student.set(kor, eng);
 		student.add();
-		int avg = student.avg();
+		int average = student.avg();
 		System.out.println(avg);
 		total = total + avg;
 	}
@@ -35,7 +35,7 @@ int main(){
 		return sum;
 	}
 	
-	int avg(){ 
+	int avg(){
 		return sum/2;
 	}
 }

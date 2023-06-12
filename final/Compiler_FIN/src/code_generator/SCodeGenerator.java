@@ -25,7 +25,6 @@ public class SCodeGenerator {
 	public void generate() {
 		for (SStatement statement : statements) {
 			String code = null;
-			System.out.println(statement.getOperator());
 			// operator
 			SOperator operator = SOperator.findByAssemblyCode(statement.getOperator());
 			code = Constant.CCodeGenerator.hexaCodeGenerate(operator.getCode());

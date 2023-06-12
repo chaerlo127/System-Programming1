@@ -10,15 +10,19 @@ public class Memory {
 	public Vector<String> getMemory() {return memory;}
 	public Scanner scanner;
 	private int[] dataSegment;
-	
+	private int[] stackSegment;
+	private int[] heapSegment;
+
 	private CPU.Register mar;
 	private CPU.Register mbr;
-		
+
 	public Memory() {
 		this.memory = new Vector<String>();
-		this.dataSegment = new int[9];
+		this.dataSegment = new int[1000];
+		this.stackSegment = new int[1000];
+		this.heapSegment = new int[1000];
 	}
-	
+
 	public void setFile(File file) {
 		try {
 			scanner = new Scanner(file);
@@ -26,7 +30,7 @@ public class Memory {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void parse() {
 		while(scanner.hasNext()) {
 			String token = scanner.nextLine();
@@ -36,25 +40,29 @@ public class Memory {
 		}
 		scanner.close();
 	}
-	
+
 	public void associate(CPU.Register mar, CPU.Register mbr) {
 		this.mar = mar;
 		this.mbr = mbr;
-		
 	}
 
 	public void load() {
 		int address = mar.getValue();
 		mbr.setValue(dataSegment[address]);
 	}
-	
-	
-	public void store() {
+
+	// data segment code
+	public void loadData() {
+		int address = mar.getValue();
+		mbr.setValue(dataSegment[address]);
+	}
+
+	public void storeData() {
 		int address = mar.getValue();
 		int value = mbr.getValue();
 		dataSegment[address] = value;
 	}
-	
+
 	public String showDS() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("[data segment] ");

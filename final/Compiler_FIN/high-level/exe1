@@ -1,0 +1,52 @@
+int main(){
+	Scanner scanner = new Scanner(System.in);
+	int num = scanner.nextInt();
+	int total = 0;
+	int totalAvg = 0;
+	int totalKor = 0;
+    int totalEng = 0;
+	int totalKorAvg = 0;
+	int totalEngAvg = 0;
+
+	for (int i = 0; i < num ; i++){
+		int kor = Math.random();
+		int eng = Math.random();
+		Student student = new Student();
+		student.set(kor, eng);
+		student.add();
+		int average = student.avg();
+		System.out.println(avg);
+		total = total + average;
+		totalKor = totalKor + kor;
+		totalEng = totalEng + eng;
+	}
+	
+	totalAvg = total/num;
+	totalKorAvg = totalKor/num;
+	totalEngAvg = totalEng/num;
+	System.out.println(totalAvg);
+	System.out.println(totalKorAvg);
+	System.out.println(totalEngAvg);
+	
+}
+
+ class Student{ 
+	int kor;
+	int eng;
+	int sum;
+
+	void set(int kor, int eng){
+		this.kor = kor;
+		this.eng = eng;
+	}
+	
+	int add(){
+		sum = kor + eng;
+		return sum;
+	}
+
+	int avg(){
+		return sum/2;
+	}
+}
+

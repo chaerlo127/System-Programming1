@@ -15,14 +15,15 @@ public class CPU {
     private enum ESegment{
         NONE, DATA, HEAP, STACK;
     }
-
+    private Scanner scanner;
     private Memory memory;
     private EState eState;
 
     private ESegment segment;
 
-    public void associate(Memory memory) {
+    public void associate(Memory memory, Scanner scanner) {
         this.memory = memory;
+        this.scanner = scanner;
     }
 
     /**
@@ -52,8 +53,22 @@ public class CPU {
         segment = ESegment.NONE;
     }
 
+    public void initialize() {
+        mar.setValue(0);
+        mbr.setValue(0);
+        cs.setValue(0);
+        pc.setValue(0);
+        ac1.setValue(0);
+        ac2.setValue(0);
+
+        this.bEqual = false;
+        this.bGratherThan = false;
+        segment = ESegment.NONE;
+    }
+
 
     public String start(String processName) {
+        System.out.println(this.pc.value);
         this.eState = EState.eRunning;
         return this.run(processName); // 원래는 thread 의 역할임.
     }
@@ -69,6 +84,8 @@ public class CPU {
             this.decode();
             this.execute(sb);
         }
+        memory.initialize();
+        initialize();
         return sb.toString();
     }
 
@@ -78,7 +95,7 @@ public class CPU {
 
     public void fetch(StringBuilder sb) {
         instruction = new Instruction(this.memory.getMemory().get(cs.getValue() + pc.getValue()));
-        System.out.println(this.pc.value + " : " + instruction.getOperator());
+        System.out.println(this.pc.value + " : " + instruction.getOperator() + " \t" + instruction.getOperand());
         sb.append(this.pc.value + " : " + instruction.getOperator()).append("<br>");
 
     }
@@ -153,9 +170,7 @@ public class CPU {
     private void loada() {
         if (instruction.getOperand() == Constant.CPU.keyboard) {
             System.out.println("[학생 수를 입력하세요!]");
-            Scanner scanner = new Scanner(System.in);
             mbr.setValue(scanner.nextInt());
-            scanner.close();
         } else if (instruction.getOperand() == Constant.CPU.random) {
             int score = (int) (Math.random() * 51) + 50;
             System.out.println("--------------------------------------------------------------------------------[학생들의 랜덤 점수]: " + score);

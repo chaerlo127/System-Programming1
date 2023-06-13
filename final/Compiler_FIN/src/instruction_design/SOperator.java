@@ -33,7 +33,7 @@ public enum SOperator {
 	SPUSH(0x1E, "Stack segment push", "spush"),
 	SPOP(0x1F, "Stack segemnt pop", "spop"),
 	SLOADA(0x20, "주소에 있는 값 불러오기 ","sloada"),
-	SLOADC(0x21, "상수 불러오기 ","sloada"),
+	SLOADC(0x21, "상수 불러오기 ","sloadc"),
 	SADDA(0x22, "레지스터 내 값을 더하기 ","sadda"),
 	SADDC(0x23, "상수 값을 더하기 ","saddc"),
 	SSUBA(0x24, "레지스터 내 값을 빼기 ", 	"ssuba"),

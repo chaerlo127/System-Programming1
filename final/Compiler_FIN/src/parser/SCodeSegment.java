@@ -13,10 +13,9 @@ public class SCodeSegment implements INode {
 	}
 
 	@Override
-	public String parse(SLex lex) {
+	public String parse(SLex lex, Vector<String> printtoken) {
 		String[] tokens = lex.getTokens();
 		String operator = tokens[0];
-		System.out.println("--------------token start--------------");
 		while (operator.compareTo(".end") != 0) {
 			if ((operator.startsWith("//")) || (operator.length() == 0)) {
 				// skip
@@ -32,10 +31,10 @@ public class SCodeSegment implements INode {
 				SStatement statement = null;
 				switch (tokens.length) {
 				case 1:
-					statement = new SStatement(tokens[0]);
+					statement = new SStatement(tokens[0], printtoken);
 					break;
 				case 2:
-					statement = new SStatement(tokens[0], tokens[1]);
+					statement = new SStatement(tokens[0], tokens[1], printtoken);
 					break;
 				default:
 					break;

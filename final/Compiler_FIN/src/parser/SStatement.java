@@ -1,5 +1,8 @@
 package parser;
+import constant.Constant;
 import lex.SLex;
+
+import java.util.Vector;
 
 public class SStatement implements INode {
 	private String operator;
@@ -7,20 +10,23 @@ public class SStatement implements INode {
 	public String getOperator() {return operator;}
 	public String getOperand() {return operand;}
 
-	public SStatement(String operator) {
+	public SStatement(String operator, Vector<String> tokens) {
 		this.operator = operator;
 		System.out.println(operator);
+		tokens.add(operator);
 	}
 
-	public SStatement(String operator, String operand) {
+	public SStatement(String operator, String operand, Vector<String> tokens) {
 		this.operator = operator;
 		this.operand = operand;
 		System.out.println(operator);
+		tokens.add(operator);
 		System.out.println(operand);
+		tokens.add(operand);
 	}
 
 	@Override
-	public String parse(SLex lex) {
+	public String parse(SLex lex, Vector<String> token) {
 		String[] tokens = lex.getTokens(); // 한라인의 토큰을 한번에 가져옴.
 		
 		operator = tokens[0];
@@ -30,25 +36,17 @@ public class SStatement implements INode {
 		return operator;
 	}
 	
-//	public String showStatment() {
-//		if(this.operand1 == null) 
-//			return Constant.CStatement.PRINT_STATEMENT_OPERATOR + this.operator ;
-//		if(this.operand2 == null) 
-//			return Constant.CStatement.PRINT_STATEMENT_OPERATOR + this.operator 
-//					+ Constant.CStatement.PRINT_STATEMENT_OPERAND1 + this.operand1;
-//		return Constant.CStatement.PRINT_STATEMENT_OPERATOR + this.operator 
-//				+ Constant.CStatement.PRINT_STATEMENT_OPERAND1 + this.operand1
-//				+ Constant.CStatement.PRINT_STATEMENT_OPERAND2 + this.operand2;
-//	}
-//	
-//	public String showStatmentForUI() {
-//		if(this.operand1 == null) 
-//			return Constant.CStatement.PRINT_STATEMENT_OPERATOR + this.operator ;
-//		if(this.operand2 == null) 
-//			return Constant.CStatement.PRINT_STATEMENT_OPERATOR + this.operator +  Constant.TAB 
-//					+ Constant.CStatement.PRINT_STATEMENT_OPERAND1 + this.operand1;
-//		return Constant.CStatement.PRINT_STATEMENT_OPERATOR + this.operator + Constant.TAB 
-//				+ Constant.CStatement.PRINT_STATEMENT_OPERAND1 + this.operand1 + Constant.TAB 
-//				+ Constant.CStatement.PRINT_STATEMENT_OPERAND2 + this.operand2;
-//	}
+	public String showStatment() {
+		if(this.operand == null)
+			return Constant.CStatement.PRINT_STATEMENT_OPERATOR + this.operator ;
+		return Constant.CStatement.PRINT_STATEMENT_OPERATOR + this.operator
+				+ Constant.CStatement.PRINT_STATEMENT_OPERAND + this.operand;
+	}
+
+	public String showStatmentForUI() {
+		if(this.operand == null)
+			return Constant.CStatement.PRINT_STATEMENT_OPERATOR + this.operator ;
+		return Constant.CStatement.PRINT_STATEMENT_OPERATOR + this.operator + Constant.TAB
+				+ Constant.CStatement.PRINT_STATEMENT_OPERAND + this.operand + Constant.TAB;
+	}
 }

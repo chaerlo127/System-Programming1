@@ -13,13 +13,13 @@ public class SProgram implements INode {
 	}
 
 	@Override
-	public String parse(SLex lex) {
+	public String parse(SLex lex, Vector<String> tokens) {
 		String token = lex.getToken();
 		if (token.compareTo(".header") == 0) {
-			token = this.header.parse(lex);
+			token = this.header.parse(lex, tokens);
 		}
 		if (token.compareTo(".code") == 0) {
-			token = this.codeSegment.parse(lex);
+			token = this.codeSegment.parse(lex, tokens);
 		}
 		return null;
 	}

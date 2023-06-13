@@ -5,10 +5,10 @@ import java.util.Scanner;
 
 public class SLex {
 	private Scanner scanner;
-	
+
 	public SLex() {
 	}
-	
+
 	public void initialize(File file) {
 		try {
 			scanner = new Scanner(file);
@@ -16,14 +16,16 @@ public class SLex {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void finalize() {
 		scanner.close();
 	}
-	
+
 	public String getToken() {
 		if(scanner.hasNext()) {
-			return scanner.next();
+			String token = scanner.next();
+			System.out.println(token);
+			return token;
 		}
 		return null;
 	}

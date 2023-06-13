@@ -6,14 +6,14 @@ public class Constant {
 		public final static String PRINT_SYMBOL_TABLE_SEN = "------------------------ [SYMBOL TABLE] ------------------------";
 		public final static String PRINT_SYMBOL_TABLE_VARIABLE_NAME = "VARIABLE NAME : ";
 		public final static String PRINT_SYMBOL_TABLE_VALUE = "\t\t VALUE: ";
-		
+		public final static String PRINT_SYMBOL_TABLE_LABEL = "\t\t LABEL: ";
+
 	}
 	
 	public class CStatement{
 		public final static String PRINT_STATEMENT_SEN = "------------------------ [STATEMENT CODE] ------------------------";
 		public final static String PRINT_STATEMENT_OPERATOR = "OPERATOR : ";
-		public final static String PRINT_STATEMENT_OPERAND1 = "\t\t OPERAND1: ";
-		public final static String PRINT_STATEMENT_OPERAND2 = "\t\t OPERAND2: ";
+		public final static String PRINT_STATEMENT_OPERAND = "\t\t OPERAND: ";
 	}
 	
 	public class CCodeGenerator{
@@ -24,6 +24,10 @@ public class Constant {
 		public static String hexaCodeGenerate(int decimalNum) {
 			return Constant.CCodeGenerator.PRINT_HEXA_SIGN + Integer.toHexString(decimalNum) + " ";
 		}
+	}
+
+	public class CToken{
+		public final static String PRINT_TOKEN_SEN = "------------------------ [TOKEN] ------------------------";
 	}
 	
 	public class CUI{

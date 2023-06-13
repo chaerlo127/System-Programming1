@@ -131,14 +131,15 @@ public class Memory {
     }
 
     private int showActivationRecord() {
+
+        System.out.printf("%s %-15s %s","|-----", "ACTIVATION RECORD", "----|\n");
         int phy = Constant.Memory.totalSegmentSize * pageNumber + Constant.Memory.stacksegment + stackloca * 20;
-        System.out.println("[[[[[[ACTIVATION RECORD]]]]]]");
-        System.out.println("| \t ------------------------- \t |");
-        if(segmentation[phy] != 0) System.out.println("| \tReturn Value: " + segmentation[phy] + "\t |");
-        else System.out.println("| \tReturn Value: 없음 ! " + "\t |");
-        System.out.println("| \t Return Address: " + segmentation[phy + 4] + "\t |");
+        System.out.println("|----------------------------|");
+        if(segmentation[phy] != 0) System.out.printf("%-15s %-10s %s", "| Return Value", segmentation[phy], "|\n");
+        else System.out.printf("%-15s %-10s %s", "| Return Value", "없음 ! ", "|\n");
+        System.out.printf("%-15s %-10s %s", "| Return Address", segmentation[phy + 4], "|\n");
         for(int i = 8; i < mar.getValue(); i += 4){
-            System.out.println("| \t Attribute: " + segmentation[phy + i] + "\t |");
+            System.out.printf("%-15s %-10s %s", "| Attribute", segmentation[phy + i], "|\n");
         }
         return phy;
     }

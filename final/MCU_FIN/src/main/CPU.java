@@ -147,6 +147,7 @@ public class CPU {
     private void haltProgram() {
         this.eState = EState.eStopped;
         System.out.println("[System the end]");
+        memory.addPage(); // 페이지 위치 조정 (다음 프로그램 실행을 위해)
     }
 
     private void loada() {

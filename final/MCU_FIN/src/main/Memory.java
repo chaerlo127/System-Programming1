@@ -25,11 +25,11 @@ public class Memory {
     private CPU.Register mbr;
 
     public Memory() {
-        this.memory = new Vector<String>();
+        this.memory = new Vector<>();
         this.segmentation = new int[3000];
         this.stackloca = 0;
         this.pageNumber = 0;
-        totalPageNumber = this.segmentation.length/600; // 전체 세그먼트의 갯수로 나눔.
+        totalPageNumber = this.segmentation.length/Constant.Memory.totalSegmentSize; // 전체 세그먼트의 갯수로 나눔.
     }
 
     public void setFile(File file) {
@@ -117,14 +117,9 @@ public class Memory {
         this.stackloca++;
     }
 
-//    public String showDS() {
-//        StringBuilder sb = new StringBuilder();
-//        sb.append("[data segment] ");
-//        for (int i = 0; i < dataSegment.length; i++) {
-//            sb.append("indxex: " + i + " -> size: " + dataSegment[i]).append(", ");
-//        }
-//        System.out.println(sb.toString());
-//        return sb.toString();
-//    }
+    public void addPage(){
+        if(pageNumber == totalPageNumber) pageNumber = 0;
+        else pageNumber ++;
+    }
 
 }

@@ -95,7 +95,7 @@ public class CPU {
 
     public void fetch(StringBuilder sb) {
         instruction = new Instruction(this.memory.getMemory().get(cs.getValue() + pc.getValue()));
-        System.out.println(this.pc.value + " : " + instruction.getOperator() + " \t" + instruction.getOperand());
+        System.out.println(this.pc.value + " : " + instruction.getOperator());
         sb.append(this.pc.value + " : " + instruction.getOperator()).append("<br>");
 
     }
@@ -173,7 +173,7 @@ public class CPU {
             mbr.setValue(scanner.nextInt());
         } else if (instruction.getOperand() == Constant.CPU.random) {
             int score = (int) (Math.random() * 51) + 50;
-            System.out.println("--------------------------------------------------------------------------------[학생들의 랜덤 점수]: " + score);
+            System.out.println("[[[[[[[[[[[[학생들의 랜덤 점수]]]]]]]]]]]]: " + score);
             mbr.setValue(score);
         } else {
             mar.setValue(instruction.getOperand());
@@ -187,7 +187,7 @@ public class CPU {
 
     private void storea() {
         if (instruction.getOperand() == Constant.CPU.monitor) {
-            System.out.println("--------------------------------------------------------------------------------[결과 값]: " + mbr.getValue());
+            System.out.println("[[[[[[[[[결과 값]]]]]]]]]: " + mbr.getValue());
         } else {
             // mar에 주소를 저장해두고
             mar.setValue(instruction.getOperand());
@@ -206,8 +206,6 @@ public class CPU {
         segment = ESegment.NONE;
         ac2.setValue(mbr.getValue());
         // ac1, ac2를 이용해서 값을 변경
-        System.out.println("--------------------------------------------------------------------------------[ac1]: "+ ac1.getValue());
-        System.out.println("--------------------------------------------------------------------------------[ac2]: "+ ac2.getValue());
         ac1.setValue(ac1.getValue() + ac2.getValue());
         mbr.setValue(ac1.getValue());
 
@@ -352,6 +350,7 @@ public class CPU {
         memory.storeStack();
     }
     private void spop() {
+        mar.setValue(instruction.getOperand());
         memory.spop();
     }
 

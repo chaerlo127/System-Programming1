@@ -23,11 +23,13 @@ public class Main {
 	}
 
 	public void run() {
+		System.out.println("[MCU] (1) exe (2) 끝내기");
 		int input = scanner.nextInt();
 		while (input != 0){
 			memory.setFile(new File("exe/exe"));
 			memory.parse();
 			cpu.start("exe");
+			System.out.println("[MCU] (1) exe (2) 끝내기");
 			input = scanner.nextInt();
 		}
 		scanner.close();

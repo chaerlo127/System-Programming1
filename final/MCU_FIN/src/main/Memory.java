@@ -65,18 +65,18 @@ public class Memory {
     public void loadData() {
         int address = mar.getValue();
         // 물리적 주소 (페이지 넘버 + 데이터 세그먼트 주소) + 논리적 주소
-        int phy = Constant.Memory.totalSegmentSize * pageNumber + Constant.Memory.datasegement;
-        System.out.println("physical address: " + phy);
+        int phy = Constant.Memory.totalSegmentSize * pageNumber + Constant.Memory.datasegement + address;
+        System.out.println("******* physical address: " + phy);
         mbr.setValue(segmentation[Constant.Memory.totalSegmentSize * pageNumber + Constant.Memory.datasegement + address]);
-        System.out.println("---------------------------------------- data load [address]: " + address + " [value]: " + mbr.getValue());
+        System.out.println("******* data load [address]: " + address);
     }
 
     public void storeData() {
         int address = mar.getValue();
         int value = mbr.getValue();
-        int phy = Constant.Memory.totalSegmentSize * pageNumber + Constant.Memory.datasegement;
-        System.out.println("physical address: " + phy);
-        System.out.println("---------------------------------------- data store [address]: " + address + " [value]: " + value);
+        int phy = Constant.Memory.totalSegmentSize * pageNumber + Constant.Memory.datasegement + address;
+        System.out.println("******* physical address: " + phy);
+        System.out.println("******* data store [address]: " + address + " [value]: " + value);
         // 물리적 주소 (페이지 넘버 + 데이터 세그먼트 주소) + 논리적 주소
         segmentation[Constant.Memory.totalSegmentSize * pageNumber + Constant.Memory.datasegement + address] = value;
     }
@@ -84,8 +84,8 @@ public class Memory {
     // heap segment code
     public void loadHeap() {
         int address = mar.getValue();
-        int phy = Constant.Memory.totalSegmentSize * pageNumber + Constant.Memory.heapsegment;
-        System.out.println("physical address: " + phy);
+        int phy = Constant.Memory.totalSegmentSize * pageNumber + Constant.Memory.heapsegment + address;
+        System.out.println("******* physical address: " + phy);
         // 물리적 주소 (페이지 넘버 + 데이터 세그먼트 주소) + 논리적 주소
         mbr.setValue(segmentation[Constant.Memory.totalSegmentSize * pageNumber + Constant.Memory.heapsegment + address]);
     }
@@ -93,9 +93,9 @@ public class Memory {
     public void storeHeap() {
         int address = mar.getValue();
         int value = mbr.getValue();
-        int phy = Constant.Memory.totalSegmentSize * pageNumber + Constant.Memory.heapsegment;
-        System.out.println("physical address: " + phy);
-        System.out.println("---------------------------------------- heap [address]: " + address + " [value]: " + value);
+        int phy = Constant.Memory.totalSegmentSize * pageNumber + Constant.Memory.heapsegment + address;
+        System.out.println("******* physical address: " + phy);
+        System.out.println("******* heap [address]: " + address + " [value]: " + value);
         // 물리적 주소 (페이지 넘버 + 데이터 세그먼트 주소) + 논리적 주소
         segmentation[Constant.Memory.totalSegmentSize * pageNumber + Constant.Memory.heapsegment + address] = value;
     }
@@ -104,29 +104,43 @@ public class Memory {
     public void loadStack() {
         int address = mar.getValue();
         // 물리적 주소 (페이지 넘버 + 데이터 세그먼트 주소) + 논리적 주소
-        int phy = Constant.Memory.totalSegmentSize * pageNumber + Constant.Memory.stacksegment;
-        System.out.println("physical address: " + phy);
+        int phy = Constant.Memory.totalSegmentSize * pageNumber + Constant.Memory.stacksegment + address;
+        System.out.println("******* physical address: " + phy);
         mbr.setValue(segmentation[Constant.Memory.totalSegmentSize * pageNumber + Constant.Memory.stacksegment + stackloca * 20 + address]);
     }
 
     public void storeStack() {
         int address = mar.getValue();
         int value = mbr.getValue();
-        int phy = Constant.Memory.totalSegmentSize * pageNumber + Constant.Memory.stacksegment;
-        System.out.println("physical address: " + phy);
+        int phy = Constant.Memory.totalSegmentSize * pageNumber + Constant.Memory.stacksegment + address;
+        System.out.println("******* physical address: " + phy);
         // 물리적 주소 (페이지 넘버 + 데이터 세그먼트 주소) + 논리적 주소
         segmentation[Constant.Memory.totalSegmentSize * pageNumber + Constant.Memory.stacksegment + stackloca * 20 + address] = value;
-        System.out.println("---------------------------------------- store stack [address]: " + address + " [value]: " + value);
+        System.out.println("******* store stack [address]: " + address + " [value]: " + value);
 
     }
 
     public void spop() {
+        int phy = showActivationRecord();
         // 안에 있는 값을 다 초기화 시켜주기
         for(int i = 0; i < 20; i++){
             // 물리적 주소 (페이지 넘버 + 데이터 세그먼트 주소) + 논리적 주소
-            segmentation[Constant.Memory.totalSegmentSize * pageNumber + Constant.Memory.stacksegment + stackloca * 20 + i] = 0;
+            segmentation[phy + i] = 0;
         }
         this.stackloca--;
+    }
+
+    private int showActivationRecord() {
+        int phy = Constant.Memory.totalSegmentSize * pageNumber + Constant.Memory.stacksegment + stackloca * 20;
+        System.out.println("[[[[[[ACTIVATION RECORD]]]]]]");
+        System.out.println("| \t ------------------------- \t |");
+        if(segmentation[phy] != 0) System.out.println("| \tReturn Value: " + segmentation[phy] + "\t |");
+        else System.out.println("| \tReturn Value: 없음 ! " + "\t |");
+        System.out.println("| \t Return Address: " + segmentation[phy + 4] + "\t |");
+        for(int i = 8; i < mar.getValue(); i += 4){
+            System.out.println("| \t Attribute: " + segmentation[phy + i] + "\t |");
+        }
+        return phy;
     }
 
     public void spush() {

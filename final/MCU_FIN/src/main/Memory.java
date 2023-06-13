@@ -52,7 +52,7 @@ public class Memory {
             }
         }
         scanner.close();
-        System.out.println("[Paging]-------------------------------------------");
+        System.out.println("[Memory Paging]-------------------------------------------");
         System.out.println("[현재 페이지 숫자] : " + this.pageNumber +  " [전체 페이지 숫자] : " + this.totalPageNumber);
     }
 

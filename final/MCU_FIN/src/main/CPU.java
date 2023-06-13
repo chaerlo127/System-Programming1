@@ -30,7 +30,7 @@ public class CPU {
      * register
      */
     public Register mbr;
-    public Register mar, cs, pc, ac1, ac2; // code segment register, program counter
+    public Register mar, hs, ds, ss, cs, pc, ac1, ac2; // code segment register, program counter
     private Instruction instruction;
 
 
@@ -44,6 +44,9 @@ public class CPU {
         mar = new Register();
         mbr = new Register();
         cs = new Register();
+        hs = new Register();
+        ds = new Register();
+        ss = new Register();
         pc = new Register();
         ac1 = new Register();
         ac2 = new Register();

@@ -190,6 +190,8 @@ public class CPU {
         segment = ESegment.NONE;
         ac2.setValue(mbr.getValue());
         // ac1, ac2를 이용해서 값을 변경
+        System.out.println("--------------------------------------------------------------------------------[ac1]: "+ ac1.getValue());
+        System.out.println("--------------------------------------------------------------------------------[ac2]: "+ ac2.getValue());
         ac1.setValue(ac1.getValue() + ac2.getValue());
         mbr.setValue(ac1.getValue());
 
@@ -268,16 +270,19 @@ public class CPU {
         segment = ESegment.NONE;
         ac2.setValue(mbr.getValue());
         // ac1, ac2를 이용해서 값을 변경
-        ac1.setValue((int) (ac1.getValue() / ac2.getValue()));
+        ac1.setValue(ac1.getValue() / ac2.getValue());
         mbr.setValue(ac1.getValue());
     }
 
     private void divc() {
+        // todo : 여기 봐야함
+        System.out.println("ac1 " + mbr.getValue());
+        System.out.println("ac2 " + instruction.getOperand());
         // mbr 에 저장된 값을 ac1 에 이동
         ac1.setValue(mbr.getValue());
         // instruction 에 저장되어 있는 상수 값을 ac2 로 이동
         ac2.setValue(instruction.getOperand());
-        ac1.setValue((int) (ac1.getValue() / ac2.getValue()));
+        ac1.setValue(ac1.getValue() / ac2.getValue());
         mbr.setValue(ac1.getValue());
     }
 
@@ -350,7 +355,7 @@ public class CPU {
             mar.setValue(4);
             mbr.setValue(this.pc.getValue());
             memory.storeStack();
-            this.pc.setValue(instruction.getOperand());
+            this.pc.setValue(instruction.getOperand()-1);
         }
 
         this.bEqual = false;

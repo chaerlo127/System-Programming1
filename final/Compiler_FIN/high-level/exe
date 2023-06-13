@@ -12,7 +12,7 @@ int main(){
 		student.add();
 		int average = student.avg();
 		System.out.println(avg);
-		total = total + avg;
+		total = total + average;
 	}
 	
 	totalAvg = total/num;

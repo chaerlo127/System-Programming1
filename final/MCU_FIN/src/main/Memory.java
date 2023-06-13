@@ -57,11 +57,13 @@ public class Memory {
     public void loadData() {
         int address = mar.getValue();
         mbr.setValue(dataSegment[address]);
+        System.out.println("---------------------------------------- load [address]: " + address + " [value]: " + mbr.getValue());
     }
 
     public void storeData() {
         int address = mar.getValue();
         int value = mbr.getValue();
+        System.out.println("---------------------------------------- [address]: " + address + " [value]: " + value);
         dataSegment[address] = value;
     }
 
@@ -74,6 +76,7 @@ public class Memory {
     public void storeHeap() {
         int address = mar.getValue();
         int value = mbr.getValue();
+        System.out.println("---------------------------------------- [address]: " + address + " [value]: " + value);
         heapSegment[address] = value;
     }
 
@@ -87,6 +90,8 @@ public class Memory {
         int address = mar.getValue();
         int value = mbr.getValue();
         stackSegment[stackloca * 20 + address] = value;
+        System.out.println("---------------------------------------- store stack [address]: " + address + " [value]: " + value);
+
     }
 
     public void spop() {

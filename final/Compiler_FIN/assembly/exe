@@ -64,7 +64,7 @@ start:
 		loada @average
 		storea @monitor
 		loada @total
-		adda @avg
+		adda @average
 		storea @total
 		loada @i
 		addc 1
@@ -89,7 +89,7 @@ add:
 		hstorea 8
 		sjump 4
 avg:
-		hloada 12
+		hloada 8
 		hdivc 2
 		sstorea 0
 		sjump 4

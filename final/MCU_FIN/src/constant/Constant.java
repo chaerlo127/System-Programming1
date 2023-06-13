@@ -7,6 +7,10 @@ public class Constant {
 		public static final int random = 200;
 	}
 	public class Memory{
+		public static final int datasegement = 0;
+		public static final int stacksegment = 200;
+		public static final int heapsegment = 400;
+		public static final int totalSegmentSize = 600;
 		
 	}
 	public class UI{
